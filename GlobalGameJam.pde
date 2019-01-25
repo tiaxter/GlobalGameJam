@@ -1,9 +1,18 @@
-static int DESIGN_W = 1920;
-static int DESIGN_H = 1080;
+int DESIGN_W = 1920;
+int DESIGN_H = 1080;
+
 float ratio = 0.0;
 PImage img;
 Controller controller;
 ControlIO control;
+
+
+
+// camera_x: offset dove lo sfondo inizia
+// camera_y: offset dove lo sfondo inizia
+
+int camera_x = 0;
+int camera_y = 0;
 
 void setup()
 {
@@ -12,14 +21,20 @@ void setup()
     controller = new Controller(control);
     size(500,500);
     ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);
-    print(ratio);
-    img = loadImage("sfondo.jpg");
+    img = loadImage("Level 1 Big Base.png");
 }
 
 void draw()
 {
-    scale(ratio);
-    image(img,0,0);
+    background(0);
+    ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);
+    if (ratio < 1.0)
+    {
+        scale(ratio);
+        translate(((float)width - this.DESIGN_W * ratio) / 2.0, ((float)height - this.DESIGN_H * ratio / 2.0));    
+    }    
+    
+    image(img,-camera_x, -camera_y);
 }
 
 void keyPressed(){
