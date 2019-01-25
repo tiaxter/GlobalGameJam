@@ -8,7 +8,7 @@ import net.java.games.input.*;
 
   Controller(ControlIO control){
     this.control = control;
-    stick = control.getMatchedDevice("xb360");
+    stick = control.getMatchedDeviceSilent("xb360");
   }
 
   boolean Apressed(){

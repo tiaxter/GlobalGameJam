@@ -18,37 +18,61 @@ import java.io.IOException;
 
 public class GlobalGameJam extends PApplet {
 
-static int DESIGN_W = 1920;
-static int DESIGN_H = 1080;
+int DESIGN_W = 1920;
+int DESIGN_H = 1080;
+
 float ratio = 0.0f;
 PImage img;
 Controller controller;
 ControlIO control;
 
+
+
+// camera_x: offset dove lo sfondo inizia
+// camera_y: offset dove lo sfondo inizia
+
+int camera_x = 0;
+int camera_y = 0;
+
 public void setup()
 {
     //fullScreen();
+
     control = ControlIO.getInstance(this);
     controller = new Controller(control);
+    if (controller.stick == null) {
+      controller = null;
+      // End the program NOW!
+    }
     
     ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);
-    print(ratio);
-    img = loadImage("sfondo.jpg");
+    img = loadImage("Level 1 Big Base.png");
 }
 
 public void draw()
 {
-    if(controller.Apressed()){
-      System.exit(-1);
+    try{
+      if(controller.BackPressed()){
+        System.exit(-1);
+      }
+    }catch(Exception e){
+      print(e);
     }
-    scale(ratio);
-    image(img,0,0);
+    background(0);
+    ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);
+    if (ratio < 1.0f)
+    {
+        scale(ratio);
+        translate(((float)width - this.DESIGN_W * ratio) / 2.0f, ((float)height - this.DESIGN_H * ratio / 2.0f));
+    }
+
+    image(img,-camera_x, -camera_y);
 }
 
 public void keyPressed(){
   if (key == CODED) {
     if (keyCode == DOWN){
-      System.exit(-1);
+      //DOWN
     }else if (keyCode == RIGHT){
       //RIGHT
     }else if (keyCode == UP){
@@ -68,7 +92,7 @@ public void keyPressed(){
 
   Controller(ControlIO control){
     this.control = control;
-    stick = control.getMatchedDevice("xb360");
+    stick = control.getMatchedDeviceSilent("xb360");
   }
 
   public boolean Apressed(){
