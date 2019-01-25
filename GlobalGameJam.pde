@@ -5,7 +5,6 @@ PImage img;
 
 void setup()
 {
-
     //fullScreen();
     size(500,500);
     ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);

@@ -1,0 +1,14 @@
+xb360
+Blue	BlueButton	1	BUTTON	Pulsante 2	0	0.0	0.0
+Yellow	YellowButton	1	BUTTON	Pulsante 3	0	0.0	0.0
+Red	RedButton	1	BUTTON	Pulsante 1	0	0.0	0.0
+Green	GreenButton	1	BUTTON	Pulsante 0	0	0.0	0.0
+DirectionCross	DirectionCross	2	HAT	cooliehat: Hat Switch	0	1.0	0.0
+LB	LeftBack	1	BUTTON	Pulsante 4	0	0.0	0.0
+RB	Right Back	1	BUTTON	Pulsante 5	0	0.0	0.0
+RightAnalogX	Right Analog X	3	SLIDER	Rotazione X	0	1.0	0.0
+RightAnalogY	Right Analog Y	3	SLIDER	Rotazione Y	0	1.0	0.0
+LeftAnalogX	Left Analog X	3	SLIDER	Asse X	0	1.0	0.0
+LeftAnalogY	Left Analog Y	3	SLIDER	Asse Y	0	1.0	0.0
+Back	BackButton	1	BUTTON	Pulsante 6	0	0.0	0.0
+Start	StartButton	1	BUTTON	Pulsante 7	0	0.0	0.0
