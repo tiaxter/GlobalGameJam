@@ -2,42 +2,61 @@ import org.gamecontrolplus.gui.*;
 import org.gamecontrolplus.*;
 import net.java.games.input.*;
 
-ControlIO control;
-ControlDevice stick;
+ class Controller{
+  ControlDevice stick;
+  ControlIO control;
 
-void setup( ) {
-  control = ControlIO.getInstance(this);
-  stick = control.getMatchedDevice("xb360");
-}
+  Controller(ControlIO control){
+    this.control = control;
+    stick = control.getMatchedDevice("xb360");
+  }
 
-boolean Apressed(){
-  return stick.getButton("Green").pressed()
-}
+  boolean Apressed(){
+    return stick.getButton("Green").pressed();
+  }
 
-boolean Xpressed(){
-  return stick.getButton("Blue").pressed()
-}
+  boolean Xpressed(){
+    return stick.getButton("Blue").pressed();
+  }
 
-boolean Ypressed(){
-  return stick.getButton("Yellow").pressed()
-}
+   boolean Ypressed(){
+    return stick.getButton("Yellow").pressed();
+  }
 
-boolean Bpressed(){
-  return stick.getButton("Red").pressed()
-}
+   boolean Bpressed(){
+    return stick.getButton("Red").pressed();
+  }
 
-float LeftAnalogX(){
-  return stick.getSlider("LeftAnalogX").getValue();
-}
+   boolean LBpressed(){
+    return stick.getButton("LB").pressed();
+  }
 
-float LeftAnalogY(){
-  return stick.getSlider("LeftAnalogY").getValue();
-}
+   boolean RBpressed(){
+    return stick.getButton("RB").pressed();
+  }
 
-float RightAnalogX(){
-  return stick.getSlider("RightAnalogX").getValue();
-}
+   boolean BackPressed(){
+    return stick.getButton("Back").pressed();
+  }
 
-float RightAnalogY(){
-  return stick.getSlider("RightAnalogY").getValue();
+   boolean StartPressed(){
+    return stick.getButton("Back").pressed();
+  }
+
+   float LeftAnalogX(){
+    return stick.getSlider("LeftAnalogX").getValue();
+  }
+
+   float LeftAnalogY(){
+    return stick.getSlider("LeftAnalogY").getValue();
+  }
+
+   float RightAnalogX(){
+    return stick.getSlider("RightAnalogX").getValue();
+  }
+
+   float RightAnalogY(){
+    return stick.getSlider("RightAnalogY").getValue();
+  }
+
 }
