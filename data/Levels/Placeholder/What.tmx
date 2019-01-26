@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="25" height="19" tilewidth="192" tileheight="192" infinite="0" nextlayerid="8" nextobjectid="1">
- <tileset firstgid="1" source="Woods.tsx"/>
- <tileset firstgid="145" source="Props.tsx"/>
- <tileset firstgid="289" source="Walkable.tsx"/>
+ <tileset firstgid="1" source="Levels/Placeholder/Woods.tsx"/>
+ <tileset firstgid="145" source="Levels/Placeholder/Props.tsx"/>
+ <tileset firstgid="289" source="Levels/Placeholder/Walkable.tsx"/>
  <layer id="4" name="Floor" width="25" height="19">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

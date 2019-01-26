@@ -28,7 +28,7 @@ void setup()
       print("Error initializing scenes!");
       System.exit(-1);
     }
-    currentScene = Constants.MENU_SCENE;
+    currentScene = Constants.GAME_SCENE;
     
     time = millis();
 }
@@ -66,7 +66,6 @@ void draw()
     {
       if (delta_time > FADEOUT_TIME_MS)
       {
-        println("end of fade in" + fade_level);
         currentScene = target_scene;    
         fade_level = 0;
         fade_delta = 0.0;
@@ -79,7 +78,7 @@ void draw()
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     if (ratio < 1.0)
     {
-        scale(3.0);
+        //scale(3.0);
         //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
     }
 

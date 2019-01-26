@@ -22,8 +22,8 @@ class Player{
     animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
     animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
     img = loadImage("icon.png");
-    x = 128;
-    y = 128;
+    x = 192*3;
+    y = 192*3;
     setDirection(Game.DIR_IDLE);
     time = millis();
   }
