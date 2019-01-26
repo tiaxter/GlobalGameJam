@@ -104,16 +104,16 @@ class Game extends Scene {
 
 
     if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
-      moveCamera((int)(-20.0 * ratio), 0);
+      moveCamera((int)(-10.0 * ratio), 0);
 
     if (controller1[DIR_RIGHT] || controller2[DIR_RIGHT])
-      moveCamera((int)(20.0 * ratio), 0);
+      moveCamera((int)(10.0 * ratio), 0);
 
     if (controller1[DIR_UP] || controller2[DIR_UP])
-      moveCamera(0, (int)(-20.0 * ratio));
+      moveCamera(0, (int)(-10.0 * ratio));
 
     if (controller1[DIR_DOWN] || controller2[DIR_DOWN])
-      moveCamera(0, (int)(20.0 * ratio));
+      moveCamera(0, (int)(10.0 * ratio));
 
   }
 
