@@ -103,17 +103,31 @@ class Game extends Scene {
     player.draw(camera_x, camera_y);
 
 
-    if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
-      moveCamera((int)(-10.0 * ratio), 0);
+    if (controller1[DIR_LEFT])
+      moveCamera((int)(-10.0 * ratio), 0, 0);
 
-    if (controller1[DIR_RIGHT] || controller2[DIR_RIGHT])
-      moveCamera((int)(10.0 * ratio), 0);
+    if (controller2[DIR_LEFT])
+      moveCamera((int)(-10.0 * ratio), 0, 1);
 
-    if (controller1[DIR_UP] || controller2[DIR_UP])
-      moveCamera(0, (int)(-10.0 * ratio));
 
-    if (controller1[DIR_DOWN] || controller2[DIR_DOWN])
-      moveCamera(0, (int)(10.0 * ratio));
+    if (controller1[DIR_RIGHT])
+      moveCamera((int)(10.0 * ratio), 0, 0);
+
+    if(controller2[DIR_RIGHT])
+      moveCamera((int)(10.0 * ratio), 0, 1);
+
+
+    if (controller1[DIR_UP])
+     moveCamera(0, (int)(-10.0 * ratio), 0);
+
+     if( controller2[DIR_UP])
+      moveCamera(0, (int)(-10.0 * ratio), 1);
+
+    if (controller1[DIR_DOWN])
+      moveCamera(0, (int)(10.0 * ratio), 0);
+
+    if(controller2[DIR_DOWN])
+      moveCamera(0, (int)(10.0 * ratio), 1);
 
   }
 
@@ -177,7 +191,11 @@ class Game extends Scene {
   }
 
 
-  void moveCamera(int delta_x, int delta_y) {
+  void moveCamera(int delta_x, int delta_y, int movement_player) {
+
+    if (!player.isActive(movement_player))
+      return;
+
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
     if (isWalkable((int)(xy[0] / map.getTileSize().x), (int)(xy[1] / map.getTileSize().y))) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
