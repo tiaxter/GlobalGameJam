@@ -1,12 +1,13 @@
 class Player{
-  Animation animation;
+  Animation animation_move;
+  Animation animation_idle;
   float x;
   float y;
 
   PImage img;
 
   Player(String prefisso_file, int nframes){
-    //animation = new Animation(prefisso_file, nframes);
+    animation_move = new Animation("Sprites\\P1_move", 6);
     img = loadImage("icon.png");
     x = 0;
     y = 0;
@@ -15,16 +16,16 @@ class Player{
   void setDirection(int dir) {
     switch(dir){
       case 0:
-        animation.updateDirection("up");
+        animation_move.updateDirection("up");
         break;
       case 1:
-        animation.updateDirection("down");
+        animation_move.updateDirection("down");
         break;
       case 2:
-        animation.updateDirection("left");
+        animation_move.updateDirection("left");
         break;
       case 3:
-        animation.updateDirection("right");
+        animation_move.updateDirection("right");
         break;
     }
   }
@@ -56,7 +57,8 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
   {
     if (img != null)
     {
-      image(img, (this.x - camera_x), (this.y - camera_y));
+      animation_move.display((this.x - camera_x), (this.y - camera_y));
+      //image(img, (this.x - camera_x), (this.y - camera_y));
     }
   }
 }

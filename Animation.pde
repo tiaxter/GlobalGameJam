@@ -10,11 +10,16 @@ class Animation {
   
   Animation(String prefisso, int nframes) {
     this.nframes = nframes;
-    this.prefissofile = prefissofile;
+    this.prefissofile = prefisso;
     this.images = new PImage[nframes];
+
+    updateDirection("left");
   }
 
   void updateDirection(String direction){
+
+    direction = "left";
+
     for (int i = 0; i < nframes; i++) {
       // Use nf() to number format 'i' into four digits
       String filename = prefissofile + "_" + direction + "_" + i + ".png";
@@ -23,9 +28,9 @@ class Animation {
     }
   }
 
-  void display() {
+  void display(x, y) {
     frame = (frame+1) % nframes;
-    image(images[frame], 0, 0);
+    image(images[frame], x, y);
   }
 
 }
