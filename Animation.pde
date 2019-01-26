@@ -2,15 +2,16 @@
 
 class Animation {
   PImage[] images;
-  int frame;
   int nframes;
   String prefissofile;
-
-  Animation(String prefissofile, int nframes) {
+  int frame = 0;
+  int imageCount = 1;
+  int xpos, ypos;
+  
+  Animation(String prefisso, int nframes) {
     this.nframes = nframes;
     this.prefissofile = prefissofile;
-    images = new PImage[nframes];
-    updateDirection("up");
+    this.images = new PImage[nframes];
   }
 
   void updateDirection(String direction){

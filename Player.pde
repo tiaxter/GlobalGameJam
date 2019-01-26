@@ -3,8 +3,13 @@ class Player{
   float x;
   float y;
 
-  Player(String prefissofile, int nframes){
-    animation = new Animation(prefissofile, nframes);
+  PImage img;
+
+  Player(String prefisso_file, int nframes){
+    //animation = new Animation(prefisso_file, nframes);
+    img = loadImage("icon.png");
+    x = 0;
+    y = 0;
   }
 
   void setDirection(int dir) {
@@ -24,4 +29,17 @@ class Player{
     }
   }
 
+  void move(int delta_x, int delta_y)
+  {
+    if (this.x + delta_x > 0 && this.x + delta_x <  Constants.LEVEL_W)
+      this.x += delta_x;
+    if (this.y + delta_y > 0 && this.y + delta_y <  Constants.LEVEL_H)
+      this.y += delta_y;
+  }
+
+  void draw(int camera_x, int camera_y)
+  {
+    if (img != null)
+      image(img, this.x - camera_x, this.y - camera_y);        
+  }
 }
