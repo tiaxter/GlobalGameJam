@@ -1,3 +1,5 @@
+import ptmx.*;
+
 class Game extends Scene
 {
 
@@ -19,18 +21,27 @@ static final int  DIR_RIGHT = 3;
 boolean controller1[] = {false, false, false, false};
 boolean controller2[] = {false, false, false, false};
 
-PImage img;
-
+Ptmx map;
 
 Game(float ratio) { super(ratio); }
 
-boolean init(PApplet instance)
+boolean init(PApplet instance)  
 {
     player = new Player("test", 1);
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
-    img = loadImage("Level 1 Big Base.png");
-    return (player != null && img != null);
+    map = new Ptmx(instance, "floor1.tmx");
+    return (player != null && map != null);
+}
+
+int getPlayerTileX()
+{
+  return (int)(player.x / map.getTileSize().x);
+}
+
+int getPlayerTileY()
+{
+  return (int)(player.y / map.getTileSize().y);
 }
 
 void draw()
@@ -45,24 +56,34 @@ void draw()
     }
 
     imageMode(CORNER);
-    image(this.img,-camera_x, -camera_y);
+
+    map.draw(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
 
+    // textSize(8);
+    // for(int nx = 0; nx < map.getMapSize().x; nx++)
+    // for(int ny = 0; ny < map.getMapSize().y; ny++){
+    // float px = map.mapToCam(nx, ny).x;
+    // float py = map.mapToCam(nx, ny).y;
+    // ellipse(px, py, 2, 2);
+    // text(nx + "," + ny, px, py);
+    // }
+
+
     if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
-      moveCamera(-5,0);
+      moveCamera((int)(-5.0 * ratio),0);
 
     if (controller1[DIR_RIGHT] || controller2[DIR_RIGHT])
-      moveCamera(5,0);
+      moveCamera((int)(5.0 * ratio),0);
 
     if (controller1[DIR_UP] || controller2[DIR_UP])
-      moveCamera(0,-5);
+      moveCamera(0,(int)(-5.0 * ratio));
 
     if (controller1[DIR_DOWN] || controller2[DIR_DOWN])
-      moveCamera(0,5);
+      moveCamera(0, (int)(5.0 * ratio));
 
 }
-
 
 void setDirection(String dir, boolean x){
   float xoy;
@@ -113,51 +134,32 @@ void setDirection(String dir, boolean x){
 }
 }
 
+
+int getTileMapWidth()
+{
+  return (int)(map.getTileSize().x * map.getMapSize().x);
+}
+
+int getTileMapHeight()
+{
+  return (int)(map.getTileSize().y * map.getMapSize().y);
+}
+
+
 void moveCamera(int delta_x, int delta_y)
 {
 
-    // boolean move_only_player = true;
-    // if (player.x + delta_x < this.SCREEN_W / 2 || player.x + delta_x > this.LEVEL_W - this.SCREEN_W / 2)
-    // {
-    //     player.move(delta_x, 0);
-    // }
-
-    // if (player.y + delta_y < this.SCREEN_H / 2 || player.y + delta_y > this.LEVEL_H - this.SCREEN_H / 2)
-    // {
-    //     player.move(0, delta_y);
-    // }
-
-    print(camera_x);
-    print("\n");
-    print(player.x);
-    print("\n");
-    print(camera_y);
-    print("\n");
-    print(player.y);
-    print("\n");
-
     player.move(delta_x, delta_y);
 
-    if (player.x >= Constants.SCREEN_W / 2 && player.x < Constants.LEVEL_W - Constants.SCREEN_W / 2)
+    if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2)
     {
         camera_x = camera_x + delta_x;
     }
 
-    if (player.y >= Constants.SCREEN_H / 2 && player.y < Constants.LEVEL_H - Constants.SCREEN_H / 2)
+    if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2)
     {
         camera_y = camera_y + delta_y;
     }
-
-
-    print("=====\n");
-    print(camera_x);
-    print("\n");
-    print(player.x);
-    print("\n");
-    print(camera_y);
-    print("\n");
-    print(player.y);
-    print("\n");
 }
 
 
@@ -168,7 +170,6 @@ void keyReleased()
     if (keyCode == DOWN)
     {
       controller2[DIR_DOWN] = false;
-      print("DOWN released");
     }
 
     //else
@@ -193,7 +194,6 @@ void keyPressed(){
     if (keyCode == DOWN)
     {
       controller2[DIR_DOWN] = true;
-      print("DOWN pressed");
     }
     //else
      if (keyCode == RIGHT)
