@@ -7,9 +7,6 @@ class Game extends Scene {
   Player player;
   int walkableLayerIndex;
 
-  // camera_x: offset dove lo sfondo inizia
-  // camera_y: offset dove lo sfondo inizia
-
   int camera_x = 0;
   int camera_y = 0;
 
@@ -88,17 +85,6 @@ class Game extends Scene {
     map.draw(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
-
-    // textSize(8);
-    // for(int nx = 0; nx < map.getMapSize().x; nx++)
-    // for(int ny = 0; ny < map.getMapSize().y; ny++){
-    // float px = map.mapToCam(nx, ny).x;
-    // float py = map.mapToCam(nx, ny).y;
-    // ellipse(px, py, 2, 2);
-    // text(nx + "," + ny, px, py);
-    // }
-
-
     if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
       moveCamera((int)(-5.0 * ratio), 0);
 
@@ -136,7 +122,7 @@ class Game extends Scene {
         controller1[DIR_UP] = true;
         player.setDirection(DIR_UP);
       } else {
-        if (controller1[DIR_UP == true)
+        if (controller1[DIR_UP] == true)
           player.setDirection(DIR_IDLE);
 
         controller1[DIR_UP] = false;
@@ -213,7 +199,30 @@ class Game extends Scene {
         controller2[DIR_LEFT] = false;
         player.setDirection(DIR_IDLE);
       }
-      //
+      // 
+    }
+
+    if (key == 'S' || key == 's') {
+      controller1[DIR_DOWN] = false;
+      player.setDirection(DIR_IDLE);
+    }
+
+    //else
+    if (key == 'D' || key == 'd'){
+      controller1[DIR_RIGHT] = false;
+      player.setDirection(DIR_IDLE);
+    }
+
+    //else
+    if (key == 'W' || key == 'w'){
+      controller1[DIR_UP] = false;
+      player.setDirection(DIR_IDLE);
+    }
+
+
+    if (key == 'A' || key == 'a'){
+      controller1[DIR_LEFT] = false;
+      player.setDirection(DIR_IDLE);
     }
   }
 
@@ -238,6 +247,28 @@ class Game extends Scene {
         controller2[DIR_LEFT] = true;
         player.setDirection(DIR_LEFT);
       }
+    }
+
+    if (key == 'S' || key == 's') {
+      controller1[DIR_DOWN] = true;
+      player.setDirection(DIR_DOWN);
+    }
+
+    //else
+    if (key == 'D' || key == 'd'){
+      controller1[DIR_RIGHT] = true;
+      player.setDirection(DIR_RIGHT);
+    }
+
+    //else
+    if (key == 'W' || key == 'w'){
+        controller1[DIR_UP] = true;
+        player.setDirection(DIR_UP);
+    }
+
+    if (key == 'A' || key == 'a'){
+      controller1[DIR_LEFT] = true;
+      player.setDirection(DIR_LEFT);
     }
   }
 }
