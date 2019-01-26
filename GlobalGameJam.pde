@@ -29,12 +29,10 @@ void draw()
     if (ratio < 1.0)
     {
         scale(ratio);
-        translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
+        //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
     }
 
     scenes[currentScene].draw();
-
-    //player.animation.display();
 }
 
 

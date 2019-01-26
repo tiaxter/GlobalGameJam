@@ -149,7 +149,7 @@ int getTileMapHeight()
 void moveCamera(int delta_x, int delta_y)
 {
 
-    player.move(delta_x, delta_y);
+    player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
     if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2)
     {

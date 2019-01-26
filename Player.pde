@@ -29,11 +29,12 @@ class Player{
     }
   }
 
-  void move(int delta_x, int delta_y)
+  void move(int delta_x, int delta_y, int levelW, int levelH)
   {
-    if (this.x + delta_x > 0 && this.x + delta_x <  Constants.LEVEL_W)
+    if (this.x + delta_x >= 0 && this.x + delta_x < levelW - 128)
       this.x += delta_x;
-    if (this.y + delta_y > 0 && this.y + delta_y <  Constants.LEVEL_H)
+   
+    if (this.y + delta_y >= 0 && this.y + delta_y <  levelH - 128)
       this.y += delta_y;
   }
 
@@ -41,7 +42,6 @@ class Player{
   {
     if (img != null)
     {
-      imageMode(CORNER);
       image(img, (this.x - camera_x), (this.y - camera_y));
     }
   }
