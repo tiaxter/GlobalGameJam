@@ -24,7 +24,7 @@ class Player{
     img = loadImage("icon.png");
     x = 0;
     y = 0;
-
+    setDirection(Game.DIR_IDLE);
     time = millis();
   }
 
