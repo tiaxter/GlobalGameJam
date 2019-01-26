@@ -26,7 +26,7 @@ void setup()
       System.exit(-1);
     }
     currentScene = Constants.MENU_SCENE;
-    
+
 }
 
 void transition(int nextScene)
@@ -42,7 +42,7 @@ void transition(int nextScene)
 
 
 void draw()
-{    
+{
 
 
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
@@ -53,16 +53,16 @@ void draw()
     }
 
     scenes[currentScene].draw();
-    
+
     if (fade)
     {
       screen_x += 50.0;
       fill(50,255);
-      rect(screen_x, 0, width, height);    
+      rect(screen_x, 0, width, height);
 
       if (screen_x > 0)
       {
-        currentScene = target_scene;      
+        currentScene = target_scene;
       }
 
       if (screen_x > Constants.SCREEN_W)
