@@ -6,6 +6,7 @@ class Game extends Scene
 Controller controller;
 ControlIO control;
 Player player;
+int walkableLayerIndex;
 
 // camera_x: offset dove lo sfondo inizia
 // camera_y: offset dove lo sfondo inizia
@@ -25,13 +26,42 @@ Ptmx map;
 
 Game(float ratio) { super(ratio); }
 
-boolean init(PApplet instance)  
+boolean init(PApplet instance)
 {
     player = new Player("test", 1);
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
     map = new Ptmx(instance, "floor1.tmx");
+    walkableLayerIndex = walkableLayer();
     return (player != null && map != null);
+}
+
+int walkableLayer(){
+  int layerindex = 0;
+  int maplayer[];
+  do{
+    layerindex++;
+    maplayer = map.getData(layerindex);
+  }while(maplayer != null && !maplayer.equals("Walkable"));
+  for(int x=0; x<10; x++){
+    for(int y=0; y<10;y++){
+      print(map.getTileIndex(layerindex-1, x, y));
+    }
+    println("\n");
+  }
+  return layerindex-1;
+}
+
+boolean isWalkable(int x, int y){
+  println(walkableLayerIndex);
+  println(x);
+  println(y);
+  println(map.getTileIndex(walkableLayerIndex, x, y));
+  if(map.getTileIndex(walkableLayerIndex, x, y) >= 0){
+    print("CI PUOI CAMMINARE");
+    return true;
+  }
+  return false;
 }
 
 int getPlayerTileX()
@@ -92,7 +122,7 @@ void setDirection(String dir, boolean x){
   }catch(Exception e){
     xoy = 0;
   }
-  
+
   if(!x)
   {
     if(xoy > 0.5){
@@ -148,18 +178,21 @@ int getTileMapHeight()
 
 void moveCamera(int delta_x, int delta_y)
 {
+    float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
+    if(isWalkable((int)(xy[0]/map.getTileSize().x), (int)(xy[1]/map.getTileSize().y))){
+      player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
-    player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
+      if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2)
+      {
+          camera_x = camera_x + delta_x;
+      }
 
-    if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2)
-    {
-        camera_x = camera_x + delta_x;
+      if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2)
+      {
+          camera_y = camera_y + delta_y;
+      }
     }
 
-    if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2)
-    {
-        camera_y = camera_y + delta_y;
-    }
 }
 
 

@@ -33,10 +33,24 @@ class Player{
   {
     if (this.x + delta_x >= 0 && this.x + delta_x < levelW - 128)
       this.x += delta_x;
-   
+
     if (this.y + delta_y >= 0 && this.y + delta_y <  levelH - 128)
       this.y += delta_y;
   }
+
+float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
+  float x = this.x;
+  float y = this.y;
+
+  if (x + delta_x >= 0 && x + delta_x < levelW - 128)
+    x += delta_x;
+
+  if (y + delta_y >= 0 && y + delta_y <  levelH - 128)
+    y += delta_y;
+
+    return new float[] {x, y};
+
+}
 
   void draw(int camera_x, int camera_y)
   {
