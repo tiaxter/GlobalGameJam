@@ -1,6 +1,8 @@
 import ptmx.*;
 
 class Game extends Scene {
+  ArrayList<Collectible> oggettiCollezionabili = new ArrayList<Collectible>();
+  static final int PuP = 3;
 
   Controller controller;
   ControlIO control;
@@ -42,6 +44,7 @@ class Game extends Scene {
     controller = new Controller(control);
     map = new Ptmx(instance, "Levels/Placeholder/What.tmx");
     walkableLayerIndex = walkableLayer();
+    pupPosition();
     return (player != null && map != null);
   }
 
@@ -53,6 +56,20 @@ class Game extends Scene {
       maplayer = map.getData(layerindex);
     } while (maplayer != null && !maplayer.equals("Walkable"));
     return layerindex - 1;
+  }
+
+  /*int[]*/ void pupPosition(){
+  for(int i = 0; i < map.getMapSize().x; i++){
+      for(int j = 0; j < map.getMapSize().y; j++){
+        if(map.getTileIndex(walkableLayerIndex, i, j) == 3){
+          oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP, false));
+          //println("Un regalo per te in pos x = " + i + "y = "+ j);
+        }
+      }
+    }
+    for(Collectible c: oggettiCollezionabili){
+      println(c.toString());
+    }
   }
 
   boolean isWalkable(int x, int y) {
@@ -85,6 +102,7 @@ class Game extends Scene {
     map.draw(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
+
     if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
       moveCamera((int)(-20.0 * ratio), 0);
 
@@ -114,7 +132,7 @@ class Game extends Scene {
       } else {
         if (controller1[DIR_DOWN] == true)
           player.setDirection(DIR_IDLE);
-        
+
         controller1[DIR_DOWN] = false;
       }
 
@@ -134,7 +152,7 @@ class Game extends Scene {
       } else {
         if (controller1[DIR_LEFT] == true)
           player.setDirection(DIR_IDLE);
-        
+
         controller1[DIR_LEFT] = false;
       }
 
@@ -143,8 +161,8 @@ class Game extends Scene {
         player.setDirection(DIR_RIGHT);
       } else {
         if (controller1[DIR_RIGHT] == true)
-          player.setDirection(DIR_IDLE);        
-        controller1[DIR_RIGHT] = false;        
+          player.setDirection(DIR_IDLE);
+        controller1[DIR_RIGHT] = false;
       }
     }
   }
@@ -171,6 +189,7 @@ class Game extends Scene {
       if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
         camera_y = camera_y + delta_y;
       }
+
     }
   }
 
@@ -199,7 +218,7 @@ class Game extends Scene {
         controller2[DIR_LEFT] = false;
         player.setDirection(DIR_IDLE);
       }
-      // 
+      //
     }
 
     if (key == 'S' || key == 's') {
