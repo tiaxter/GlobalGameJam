@@ -1,6 +1,3 @@
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-
 float ratio = 0.0;
 PImage img;
 Controller controller;
@@ -13,22 +10,19 @@ Player player;
 int camera_x = 0;
 int camera_y = 0;
 
-boolean left_pressed;
-boolean right_pressed;
-boolean up_pressed;
-boolean down_pressed;
+static final int  UP = 0;
+static final int  DOWN = 1;
+static final int  LEFT = 2;
+static final int  RIGHT = 3;
 
-private Robot robot;
+boolean controller1[] = {false, false, false, false};
+boolean controller2[] = {false, false, false, false};
 
 void setup()
 {
     //fullScreen();
     player = new Player("test", 1);
-    try{
-      robot = new Robot();
-    }catch(Exception e) 
-   {}
-      control = ControlIO.getInstance(this);
+    control = ControlIO.getInstance(this);
     controller = new Controller(control);
     size(500,500);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
@@ -56,16 +50,16 @@ void draw()
     player.draw(camera_x, camera_y);
 
 
-    if (left_pressed)
+    if (controller1[LEFT] || controller2[LEFT])
       moveCamera(-5,0);
 
-    if (right_pressed)
+    if (controller1[RIGHT] || controller2[RIGHT])
       moveCamera(5,0);
 
-    if (up_pressed)
+    if (controller1[UP] || controller2[UP])
       moveCamera(0,-5);
 
-    if (down_pressed)
+    if (controller1[DOWN] || controller2[DOWN])
       moveCamera(0,5);
     //player.animation.display();
 }
@@ -80,38 +74,37 @@ void setDirection(String dir, boolean x){
   
   if(xoy > 0.5 && !x)
   {
-    robot.keyPress(KeyEvent.VK_DOWN);
+    controller1[DOWN] = true;
   }
   else
   {
-    robot.keyRelease(KeyEvent.VK_DOWN);
+    controller1[DOWN] = false;
   }
 
   if(xoy < -0.5 && !x)
   {
-        robot.keyPress(KeyEvent.VK_UP);
+    controller1[UP] = true;
   }
   else
   {
-    robot.keyRelease(KeyEvent.VK_UP);
+    controller1[UP] = false;
   }
 
   if(xoy < -0.5  && x)
   {
-    robot.keyPress(KeyEvent.VK_LEFT);
+    controller1[LEFT] = true;
   }else
   {
-    robot.keyRelease(KeyEvent.VK_LEFT);
+    controller1[LEFT] = false;
   }
 
   if(xoy > 0.5  && x)
   {
-    robot.keyPress(KeyEvent.VK_RIGHT);
-
+    controller1[RIGHT] = true;
   }
   else
   {
-    robot.keyRelease(KeyEvent.VK_RIGHT);
+    controller1[RIGHT] = false;
   }
 }
 
@@ -169,18 +162,19 @@ void keyReleased()
   if (key == CODED)
   {
     if (keyCode == DOWN)
-      down_pressed = false;
+      controller2[DOWN] = false;
 
     //else
      if (keyCode == RIGHT)
-      right_pressed = false;
+      controller2[RIGHT] = false;
 
     //else
      if (keyCode == UP)
-      up_pressed = false;
+      controller2[UP] = false;
+
 
     if (keyCode == LEFT)
-      left_pressed = false;
+      controller2[LEFT] = false;
     //
   }
 }
@@ -190,18 +184,18 @@ void keyPressed(){
  if (key == CODED)
   {
     if (keyCode == DOWN)
-      down_pressed = true;
+      controller2[DOWN] = true;
 
     //else
      if (keyCode == RIGHT)
-      right_pressed = true;
+      controller2[RIGHT] = true;
 
     //else
      if (keyCode == UP)
-      up_pressed = true;
+      controller2[UP] = true;
+
 
     if (keyCode == LEFT)
-      left_pressed = true;
-    //
+      controller2[LEFT] = true; 
   }  
 }
