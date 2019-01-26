@@ -1,20 +1,42 @@
+final int  PLAYER_WIDTH = 64;
+final int  PLAYER_HEIGHT = 64;
+
+final int PLAYER_TIME_SLOT = 4000;
+
 class Player{
-  Animation animation_move;
-  Animation animation_idle;
+  Animation animation_jonny;
+  Animation animation_kenny;
+
   float x;
   float y;
+
+  float time = 0;
+  float delta_time = 0.0f;
+
+  // Used to switch between the players
+  boolean currentPlayer = true;
 
   PImage img;
 
   Player(String prefisso_file, int nframes){
-    animation_move = new Animation("Sprites\\P1_move", 5);
+    animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
+    animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
     img = loadImage("icon.png");
     x = 0;
     y = 0;
+
+    time = millis();
   }
 
   void setDirection(int dir) {
-    animation_move.updateDirection(dir);
+     if (currentPlayer)
+      {
+        animation_jonny.updateDirection(dir);
+      }
+      else
+      {
+        animation_kenny.updateDirection(dir);
+      }
   }
 
   void move(int delta_x, int delta_y, int levelW, int levelH)
@@ -30,10 +52,10 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
   float x = this.x;
   float y = this.y;
 
-  if (x + delta_x >= 0 && x + delta_x < levelW - 128)
+  if (x + delta_x >= 0 && x + delta_x < levelW - 128 - PLAYER_WIDTH)
     x += delta_x;
 
-  if (y + delta_y >= 0 && y + delta_y <  levelH - 128)
+  if (y + delta_y >= 0 && y + delta_y <  levelH - 128 - PLAYER_HEIGHT)
     y += delta_y;
 
     return new float[] {x, y};
@@ -42,9 +64,25 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
 
   void draw(int camera_x, int camera_y)
   {
+    delta_time += millis() - time;    
+    
+    if (delta_time > PLAYER_TIME_SLOT)
+    {
+      currentPlayer = !currentPlayer;   
+      delta_time = 0.0f;   
+    }
+    time = millis();
+
     if (img != null)
     {
-      animation_move.display((this.x - camera_x), (this.y - camera_y));
+      if (currentPlayer)
+      {
+        animation_jonny.display((this.x - camera_x), (this.y - camera_y));
+      }
+      else 
+      {
+        animation_kenny.display((this.x - camera_x), (this.y - camera_y));
+      }
       //image(img, (this.x - camera_x), (this.y - camera_y));
     }
   }
