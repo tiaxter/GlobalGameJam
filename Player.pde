@@ -3,24 +3,24 @@ class Player{
   float x;
   float y;
 
-  Player(String prefisso_file, int nframes){
-    animation = new Animation(prefisso_file, nframes);
+  Player(String prefissofile, int nframes){
+    animation = new Animation(prefissofile, nframes);
   }
 
   void setDirection(int dir) {
     switch(dir){
       case 0:
-        updateDirection("up");
+        animation.updateDirection("up");
         break;
       case 1:
-        updateDirection("down");
+        animation.updateDirection("down");
         break;
       case 2:
-        updateDirection("left");
+        animation.updateDirection("left");
         break;
       case 3:
-        updateDirection("right");
-        break
+        animation.updateDirection("right");
+        break;
     }
   }
 

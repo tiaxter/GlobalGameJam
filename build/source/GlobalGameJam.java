@@ -3,6 +3,7 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.awt.event.KeyEvent; 
 import org.gamecontrolplus.gui.*; 
 import org.gamecontrolplus.*; 
 import net.java.games.input.*; 
@@ -18,6 +19,7 @@ import java.io.IOException;
 
 public class GlobalGameJam extends PApplet {
 
+
 int DESIGN_W = 1920;
 int DESIGN_H = 1080;
 
@@ -25,6 +27,7 @@ float ratio = 0.0f;
 PImage img;
 Controller controller;
 ControlIO control;
+Player player;
 
 
 
@@ -37,13 +40,9 @@ int camera_y = 0;
 public void setup()
 {
     //fullScreen();
-
+    //player = new Player("PT_Shifty", 37);
     control = ControlIO.getInstance(this);
     controller = new Controller(control);
-    if (controller.stick == null) {
-      controller = null;
-      // End the program NOW!
-    }
     
     ratio = min((float)this.width / this.DESIGN_W, (float )this.height / this.DESIGN_H);
     img = loadImage("Level 1 Big Base.png");
@@ -52,10 +51,9 @@ public void setup()
 public void draw()
 {
     try{
-      if(controller.BackPressed()){
-        System.exit(-1);
-      }
-    }catch(Exception e){
+        setDirection(String.valueOf(controller.LeftAnalogX()), true);
+        setDirection(String.valueOf(controller.LeftAnalogY()), false);
+      }catch(Exception e){
       print(e);
     }
     background(0);
@@ -67,20 +65,77 @@ public void draw()
     }
 
     image(img,-camera_x, -camera_y);
+    //player.animation.display();
+}
+
+public void setDirection(String dir, boolean x){
+  float xoy;
+  try{
+    xoy = Float.valueOf(dir);
+  }catch(Exception e){
+    xoy = 0;
+  }
+  if(dir.equals("DOWN") || xoy > 0.5f && !x){
+    //DOWN
+    //player.setDirection(1);
+    println("DOWN");
+  }else if(dir.equals("UP") || xoy < -0.5f && !x){
+    //UP
+    //player.setDirection(0);
+    println("UP");
+  }else if(dir.equals("LEFT") || xoy < -0.5f  && x){
+    //LEFT
+    //player.setDirection(2);
+    println("LEFT");
+  }else if(dir.equals("RIGHT") || xoy > 0.5f  && x){
+    //LEFT
+    //player.setDirection(3);
+    println("RIGHT");
+  }
 }
 
 public void keyPressed(){
   if (key == CODED) {
     if (keyCode == DOWN){
-      //DOWN
+      setDirection("DOWN", true);
     }else if (keyCode == RIGHT){
-      //RIGHT
+      setDirection("RIGHT", true);
     }else if (keyCode == UP){
-      //UP
+      setDirection("UP", true);
     }else if (keyCode == LEFT){
-      //LEFT
+      setDirection("LEFT", true);
     }
   }
+}
+// Class for animating a sequence of GIFs
+
+class Animation {
+  PImage[] images;
+  int frame;
+  int nframes;
+  String prefissofile;
+
+  Animation(String prefissofile, int nframes) {
+    this.nframes = nframes;
+    this.prefissofile = prefissofile;
+    images = new PImage[nframes];
+    updateDirection("up");
+  }
+
+  public void updateDirection(String direction){
+    for (int i = 0; i < nframes; i++) {
+      // Use nf() to number format 'i' into four digits
+      String filename = prefissofile + "_" + direction + "_" + i + ".png";
+      //String filename = prefissofile + "_" + nf(i, 4) + ".gif";
+      images[i] = loadImage(filename);
+    }
+  }
+
+  public void display() {
+    frame = (frame+1) % nframes;
+    image(images[frame], 0, 0);
+  }
+
 }
 
 
@@ -141,6 +196,33 @@ public void keyPressed(){
 
    public float RightAnalogY(){
     return stick.getSlider("RightAnalogY").getValue();
+  }
+
+}
+class Player{
+  Animation animation;
+  float x;
+  float y;
+
+  Player(String prefissofile, int nframes){
+    animation = new Animation(prefissofile, nframes);
+  }
+
+  public void setDirection(int dir) {
+    switch(dir){
+      case 0:
+        animation.updateDirection("up");
+        break;
+      case 1:
+        animation.updateDirection("down");
+        break;
+      case 2:
+        animation.updateDirection("left");
+        break;
+      case 3:
+        animation.updateDirection("right");
+        break;
+    }
   }
 
 }
