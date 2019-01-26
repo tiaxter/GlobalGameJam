@@ -10,10 +10,10 @@ Player player;
 int camera_x = 0;
 int camera_y = 0;
 
-static final int  UP = 0;
-static final int  DOWN = 1;
-static final int  LEFT = 2;
-static final int  RIGHT = 3;
+static final int  DIR_UP = 0;
+static final int  DIR_DOWN = 1;
+static final int  DIR_LEFT = 2;
+static final int  DIR_RIGHT = 3;
 
 boolean controller1[] = {false, false, false, false};
 boolean controller2[] = {false, false, false, false};
@@ -50,16 +50,16 @@ void draw()
     player.draw(camera_x, camera_y);
 
 
-    if (controller1[LEFT] || controller2[LEFT])
+    if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
       moveCamera(-5,0);
 
-    if (controller1[RIGHT] || controller2[RIGHT])
+    if (controller1[DIR_RIGHT] || controller2[DIR_RIGHT])
       moveCamera(5,0);
 
-    if (controller1[UP] || controller2[UP])
+    if (controller1[DIR_UP] || controller2[DIR_UP])
       moveCamera(0,-5);
 
-    if (controller1[DOWN] || controller2[DOWN])
+    if (controller1[DIR_DOWN] || controller2[DIR_DOWN])
       moveCamera(0,5);
     //player.animation.display();
 }
@@ -74,37 +74,37 @@ void setDirection(String dir, boolean x){
   
   if(xoy > 0.5 && !x)
   {
-    controller1[DOWN] = true;
+    controller1[DIR_DOWN] = true;
   }
   else
   {
-    controller1[DOWN] = false;
+    controller1[DIR_DOWN] = false;
   }
 
   if(xoy < -0.5 && !x)
   {
-    controller1[UP] = true;
+    controller1[DIR_UP] = true;
   }
   else
   {
-    controller1[UP] = false;
+    controller1[DIR_UP] = false;
   }
 
   if(xoy < -0.5  && x)
   {
-    controller1[LEFT] = true;
+    controller1[DIR_LEFT] = true;
   }else
   {
-    controller1[LEFT] = false;
+    controller1[DIR_LEFT] = false;
   }
 
   if(xoy > 0.5  && x)
   {
-    controller1[RIGHT] = true;
+    controller1[DIR_RIGHT] = true;
   }
   else
   {
-    controller1[RIGHT] = false;
+    controller1[DIR_RIGHT] = false;
   }
 }
 
@@ -159,22 +159,25 @@ void moveCamera(int delta_x, int delta_y)
 
 void keyReleased()
 {
-  if (key == CODED)
+  //if (key == CODED)
   {
     if (keyCode == DOWN)
-      controller2[DOWN] = false;
+    {
+      controller2[DIR_DOWN] = false;
+      print("DOWN released");
+    }
 
     //else
      if (keyCode == RIGHT)
-      controller2[RIGHT] = false;
+      controller2[DIR_RIGHT] = false;
 
     //else
      if (keyCode == UP)
-      controller2[UP] = false;
+      controller2[DIR_UP] = false;
 
 
     if (keyCode == LEFT)
-      controller2[LEFT] = false;
+      controller2[DIR_LEFT] = false;
     //
   }
 }
@@ -184,18 +187,20 @@ void keyPressed(){
  if (key == CODED)
   {
     if (keyCode == DOWN)
-      controller2[DOWN] = true;
-
+    {
+      controller2[DIR_DOWN] = true;
+      print("DOWN pressed");
+    }
     //else
      if (keyCode == RIGHT)
-      controller2[RIGHT] = true;
+      controller2[DIR_RIGHT] = true;
 
     //else
      if (keyCode == UP)
-      controller2[UP] = true;
+      controller2[DIR_UP] = true;
 
 
     if (keyCode == LEFT)
-      controller2[LEFT] = true; 
+      controller2[DIR_LEFT] = true; 
   }  
 }
