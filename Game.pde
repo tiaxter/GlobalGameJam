@@ -126,32 +126,39 @@ class Game extends Scene {
         controller1[DIR_DOWN] = true;
         player.setDirection(DIR_DOWN);
       } else {
+        if (controller1[DIR_DOWN] == true)
+          player.setDirection(DIR_IDLE);
+        
         controller1[DIR_DOWN] = false;
-        player.setDirection(DIR_IDLE);
       }
 
       if (xoy < -0.5) {
         controller1[DIR_UP] = true;
         player.setDirection(DIR_UP);
       } else {
+        if (controller1[DIR_UP == true)
+          player.setDirection(DIR_IDLE);
+
         controller1[DIR_UP] = false;
-        player.setDirection(DIR_IDLE);
       }
     } else {
       if (xoy < -0.5) {
         controller1[DIR_LEFT] = true;
         player.setDirection(DIR_LEFT);
       } else {
+        if (controller1[DIR_LEFT] == true)
+          player.setDirection(DIR_IDLE);
+        
         controller1[DIR_LEFT] = false;
-        player.setDirection(DIR_IDLE);
       }
 
       if (xoy > 0.5) {
         controller1[DIR_RIGHT] = true;
         player.setDirection(DIR_RIGHT);
       } else {
-        controller1[DIR_RIGHT] = false;
-        player.setDirection(DIR_IDLE);
+        if (controller1[DIR_RIGHT] == true)
+          player.setDirection(DIR_IDLE);        
+        controller1[DIR_RIGHT] = false;        
       }
     }
   }
