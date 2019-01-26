@@ -13,10 +13,12 @@ class Game extends Scene {
   int camera_x = 0;
   int camera_y = 0;
 
-  static final int DIR_UP = 0;
-  static final int DIR_DOWN = 1;
+  static final int DIR_UP = 1;
+  static final int DIR_DOWN = 0;
   static final int DIR_LEFT = 2;
   static final int DIR_RIGHT = 3;
+  static final int DIR_IDLE = 4;
+
 
   boolean controller1[] = {
     false,
@@ -53,22 +55,11 @@ class Game extends Scene {
       layerindex++;
       maplayer = map.getData(layerindex);
     } while (maplayer != null && !maplayer.equals("Walkable"));
-    for (int x = 0; x < 10; x++) {
-      for (int y = 0; y < 10; y++) {
-        print(map.getTileIndex(layerindex - 1, x, y));
-      }
-      println("\n");
-    }
     return layerindex - 1;
   }
 
   boolean isWalkable(int x, int y) {
-    println(walkableLayerIndex);
-    println(x);
-    println(y);
-    println(map.getTileIndex(walkableLayerIndex, x, y));
     if (map.getTileIndex(walkableLayerIndex, x, y) >= 0) {
-      print("CI PUOI CAMMINARE");
       return true;
     }
     return false;
@@ -136,6 +127,7 @@ class Game extends Scene {
         player.setDirection(DIR_DOWN);
       } else {
         controller1[DIR_DOWN] = false;
+        player.setDirection(DIR_IDLE);
       }
 
       if (xoy < -0.5) {
@@ -143,6 +135,7 @@ class Game extends Scene {
         player.setDirection(DIR_UP);
       } else {
         controller1[DIR_UP] = false;
+        player.setDirection(DIR_IDLE);
       }
     } else {
       if (xoy < -0.5) {
@@ -150,6 +143,7 @@ class Game extends Scene {
         player.setDirection(DIR_LEFT);
       } else {
         controller1[DIR_LEFT] = false;
+        player.setDirection(DIR_IDLE);
       }
 
       if (xoy > 0.5) {
@@ -157,6 +151,7 @@ class Game extends Scene {
         player.setDirection(DIR_RIGHT);
       } else {
         controller1[DIR_RIGHT] = false;
+        player.setDirection(DIR_IDLE);
       }
     }
   }
@@ -191,19 +186,26 @@ class Game extends Scene {
     if (key == CODED) {
       if (keyCode == DOWN) {
         controller2[DIR_DOWN] = false;
+        player.setDirection(DIR_IDLE);
       }
 
       //else
-      if (keyCode == RIGHT)
+      if (keyCode == RIGHT){
         controller2[DIR_RIGHT] = false;
+        player.setDirection(DIR_IDLE);
+      }
 
       //else
-      if (keyCode == UP)
+      if (keyCode == UP){
         controller2[DIR_UP] = false;
+        player.setDirection(DIR_IDLE);
+      }
 
 
-      if (keyCode == LEFT)
+      if (keyCode == LEFT){
         controller2[DIR_LEFT] = false;
+        player.setDirection(DIR_IDLE);
+      }
       //
     }
   }

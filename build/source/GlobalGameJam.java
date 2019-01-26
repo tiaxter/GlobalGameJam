@@ -33,7 +33,7 @@ public void setup()
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
     scenes[Constants.GAME_SCENE] = new Game(ratio);
-    
+
     if (!(scenes[Constants.MENU_SCENE].init(this) && scenes[Constants.GAME_SCENE].init(this)))
     {
       print("Error initializing scenes!");
@@ -49,7 +49,7 @@ public void draw()
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     if (ratio < 1.0f)
     {
-        scale(ratio);
+        //scale(ratio);
         //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
     }
 
@@ -66,37 +66,63 @@ public void keyPressed()
 {
   scenes[currentScene].keyPressed();
 }
-
-
-
 // Class for animating a sequence of GIFs
 
 class Animation {
   PImage[] images;
+  Frames[] frames;
+  int currentDirection;
   int nframes;
   String prefissofile;
   int frame = 0;
   int imageCount = 1;
   int xpos, ypos;
-  
+
   Animation(String prefisso, int nframes) {
-    this.nframes = nframes;
-    this.prefissofile = prefissofile;
-    this.images = new PImage[nframes];
-  }
+    frames = new Frames[5];
+    for(int i = 0; i < 5; i++){
+      switch(i){
+        case 0:
+          frames[i] = new Frames(prefisso + "_down_", nframes);
+          break;
+        case 1:
+          frames[i] = new Frames(prefisso + "_up_", nframes);
+          break;
+        case 2:
+          frames[i] = new Frames(prefisso + "_left_", nframes);
+          break;
+        case 3:
+          frames[i] = new Frames(prefisso + "_right_", nframes);
+          break;
+        case 4:
+          frames[i] = new Frames(prefisso, nframes);
+          break;
 
-  public void updateDirection(String direction){
-    for (int i = 0; i < nframes; i++) {
-      // Use nf() to number format 'i' into four digits
-      String filename = prefissofile + "_" + direction + "_" + i + ".png";
-      //String filename = prefissofile + "_" + nf(i, 4) + ".gif";
-      images[i] = loadImage(filename);
+      }
     }
+    this.nframes = nframes;
+    this.prefissofile = prefisso;
+    this.images = new PImage[nframes];
+
+    updateDirection(3);
   }
 
-  public void display() {
-    frame = (frame+1) % nframes;
-    image(images[frame], 0, 0);
+  public void updateDirection(int dir){
+
+    currentDirection = dir;
+
+    // direction = "left";
+    //
+    // for (int i = 0; i < nframes; i++) {
+    //   // Use nf() to number format 'i' into four digits
+    //   String filename = prefissofile + "_" + direction + "_" + i + ".png";
+    //   //String filename = prefissofile + "_" + nf(i, 4) + ".gif";
+    //   images[i] = loadImage(filename);
+    // }
+  }
+
+  public void display(float x, float y) {
+    frames[currentDirection].display(x, y);
   }
 
 }
@@ -177,89 +203,117 @@ static final int GAME_SCENE = 1;
   }
 
 }
+class Frames{
+
+  PImage images[];
+  int frame = 0;
+  int numero_frames;
+
+  Frames(String nome, int numero_frames){
+    this.numero_frames = numero_frames;
+    images = new PImage[numero_frames];
+    for(int i=0; i< numero_frames; i++){
+      images[i] = loadImage(nome + i + ".png");
+    }
+  }
+
+  public void display(float x, float y) {
+    frame = (frame+1) % numero_frames;
+    image(images[frame], x, y);
+  }
+
+}
 
 
-class Game extends Scene
-{
+class Game extends Scene {
 
-Controller controller;
-ControlIO control;
-Player player;
-int walkableLayerIndex;
+  Controller controller;
+  ControlIO control;
+  Player player;
+  int walkableLayerIndex;
 
-// camera_x: offset dove lo sfondo inizia
-// camera_y: offset dove lo sfondo inizia
+  // camera_x: offset dove lo sfondo inizia
+  // camera_y: offset dove lo sfondo inizia
 
-int camera_x = 0;
-int camera_y = 0;
+  int camera_x = 0;
+  int camera_y = 0;
 
-static final int  DIR_UP = 0;
-static final int  DIR_DOWN = 1;
-static final int  DIR_LEFT = 2;
-static final int  DIR_RIGHT = 3;
+  static final int DIR_UP = 1;
+  static final int DIR_DOWN = 0;
+  static final int DIR_LEFT = 2;
+  static final int DIR_RIGHT = 3;
+  static final int DIR_IDLE = 4;
 
-boolean controller1[] = {false, false, false, false};
-boolean controller2[] = {false, false, false, false};
 
-Ptmx map;
+  boolean controller1[] = {
+    false,
+    false,
+    false,
+    false
+  };
+  boolean controller2[] = {
+    false,
+    false,
+    false,
+    false
+  };
 
-Game(float ratio) { super(ratio); }
+  Ptmx map;
 
-public boolean init(PApplet instance)
-{
+  Game(float ratio) {
+    super(ratio);
+  }
+
+  public boolean init(PApplet instance) {
     player = new Player("test", 1);
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
     map = new Ptmx(instance, "floor1.tmx");
     walkableLayerIndex = walkableLayer();
     return (player != null && map != null);
-}
+  }
 
-public int walkableLayer(){
-  int layerindex = 0;
-  int maplayer[];
-  do{
-    layerindex++;
-    maplayer = map.getData(layerindex);
-  }while(maplayer != null && !maplayer.equals("Walkable"));
-  for(int x=0; x<10; x++){
-    for(int y=0; y<10;y++){
-      print(map.getTileIndex(layerindex-1, x, y));
+  public int walkableLayer() {
+    int layerindex = 0;
+    int maplayer[];
+    do {
+      layerindex++;
+      maplayer = map.getData(layerindex);
+    } while (maplayer != null && !maplayer.equals("Walkable"));
+    for (int x = 0; x < 10; x++) {
+      for (int y = 0; y < 10; y++) {
+        print(map.getTileIndex(layerindex - 1, x, y));
+      }
+      println("\n");
     }
-    println("\n");
+    return layerindex - 1;
   }
-  return layerindex-1;
-}
 
-public boolean isWalkable(int x, int y){
-  println(walkableLayerIndex);
-  println(x);
-  println(y);
-  println(map.getTileIndex(walkableLayerIndex, x, y));
-  if(map.getTileIndex(walkableLayerIndex, y, x) >= 0){
-    print("CI PUOI CAMMINARE");
-    return true;
+  public boolean isWalkable(int x, int y) {
+    println(walkableLayerIndex);
+    println(x);
+    println(y);
+    println(map.getTileIndex(walkableLayerIndex, x, y));
+    if (map.getTileIndex(walkableLayerIndex, x, y) >= 0) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
 
-public int getPlayerTileX()
-{
-  return (int)(player.x / map.getTileSize().x);
-}
+  public int getPlayerTileX() {
+    return (int)(player.x / map.getTileSize().x);
+  }
 
-public int getPlayerTileY()
-{
-  return (int)(player.y / map.getTileSize().y);
-}
+  public int getPlayerTileY() {
+    return (int)(player.y / map.getTileSize().y);
+  }
 
-public void draw()
-{
+  public void draw() {
 
-   try{
-        setDirection(String.valueOf(controller.LeftAnalogX()), true);
-        setDirection(String.valueOf(controller.LeftAnalogY()), false);
-      }catch(Exception e){
+    try {
+      setDirection(String.valueOf(controller.LeftAnalogX()), true);
+      setDirection(String.valueOf(controller.LeftAnalogY()), false);
+    } catch (Exception e) {
       //print(e);
 
     }
@@ -281,143 +335,137 @@ public void draw()
 
 
     if (controller1[DIR_LEFT] || controller2[DIR_LEFT])
-      moveCamera((int)(-5.0f * ratio),0);
+      moveCamera((int)(-5.0f * ratio), 0);
 
     if (controller1[DIR_RIGHT] || controller2[DIR_RIGHT])
-      moveCamera((int)(5.0f * ratio),0);
+      moveCamera((int)(5.0f * ratio), 0);
 
     if (controller1[DIR_UP] || controller2[DIR_UP])
-      moveCamera(0,(int)(-5.0f * ratio));
+      moveCamera(0, (int)(-5.0f * ratio));
 
     if (controller1[DIR_DOWN] || controller2[DIR_DOWN])
       moveCamera(0, (int)(5.0f * ratio));
 
-}
-
-public void setDirection(String dir, boolean x){
-  float xoy;
-  try{
-    xoy = Float.valueOf(dir);
-  }catch(Exception e){
-    xoy = 0;
   }
 
-  if(!x)
-  {
-    if(xoy > 0.5f){
-      controller1[DIR_DOWN] = true;
-    }
-    else
-    {
-      controller1[DIR_DOWN] = false;
+  public void setDirection(String dir, boolean x) {
+    float xoy;
+    try {
+      xoy = Float.valueOf(dir);
+    } catch (Exception e) {
+      xoy = 0;
     }
 
-    if(xoy < -0.5f)
-    {
-      controller1[DIR_UP] = true;
-    }
-    else
-    {
-      controller1[DIR_UP] = false;
+    if (!x) {
+      if (xoy > 0.5f) {
+        controller1[DIR_DOWN] = true;
+        player.setDirection(DIR_DOWN);
+      } else {
+        controller1[DIR_DOWN] = false;
+        player.setDirection(DIR_IDLE);
+      }
+
+      if (xoy < -0.5f) {
+        controller1[DIR_UP] = true;
+        player.setDirection(DIR_UP);
+      } else {
+        controller1[DIR_UP] = false;
+        player.setDirection(DIR_IDLE);
+      }
+    } else {
+      if (xoy < -0.5f) {
+        controller1[DIR_LEFT] = true;
+        player.setDirection(DIR_LEFT);
+      } else {
+        controller1[DIR_LEFT] = false;
+        player.setDirection(DIR_IDLE);
+      }
+
+      if (xoy > 0.5f) {
+        controller1[DIR_RIGHT] = true;
+        player.setDirection(DIR_RIGHT);
+      } else {
+        controller1[DIR_RIGHT] = false;
+        player.setDirection(DIR_IDLE);
+      }
     }
   }
-  else
-  {
-    if(xoy < -0.5f)
-    {
-      controller1[DIR_LEFT] = true;
-    }
-    else
-    {
-      controller1[DIR_LEFT] = false;
-    }
-
-    if(xoy > 0.5f)
-    {
-      controller1[DIR_RIGHT] = true;
-    }
-    else
-    {
-      controller1[DIR_RIGHT] = false;
-    }
-}
-}
 
 
-public int getTileMapWidth()
-{
-  return (int)(map.getTileSize().x * map.getMapSize().x);
-}
+  public int getTileMapWidth() {
+    return (int)(map.getTileSize().x * map.getMapSize().x);
+  }
 
-public int getTileMapHeight()
-{
-  return (int)(map.getTileSize().y * map.getMapSize().y);
-}
+  public int getTileMapHeight() {
+    return (int)(map.getTileSize().y * map.getMapSize().y);
+  }
 
 
-public void moveCamera(int delta_x, int delta_y)
-{
+  public void moveCamera(int delta_x, int delta_y) {
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
-    if(isWalkable((int)(xy[0]/map.getTileSize().x), (int)(xy[1]/map.getTileSize().y))){
+    if (isWalkable((int)(xy[0] / map.getTileSize().x), (int)(xy[1] / map.getTileSize().y))) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
-      if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2)
-      {
-          camera_x = camera_x + delta_x;
+      if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2) {
+        camera_x = camera_x + delta_x;
       }
 
-      if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2)
-      {
-          camera_y = camera_y + delta_y;
+      if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
+        camera_y = camera_y + delta_y;
       }
     }
-
-}
-
-
-public void keyReleased()
-{
-  //if (key == CODED)
-  {
-    if (keyCode == DOWN)
-    {
-      controller2[DIR_DOWN] = false;
-    }
-
-    //else
-     if (keyCode == RIGHT)
-      controller2[DIR_RIGHT] = false;
-
-    //else
-     if (keyCode == UP)
-      controller2[DIR_UP] = false;
-
-
-    if (keyCode == LEFT)
-      controller2[DIR_LEFT] = false;
-    //
   }
-}
 
-public void keyPressed(){
 
-  if (key == CODED)
-    {
-    if (keyCode == DOWN)
-    {
-      controller2[DIR_DOWN] = true;
+  public void keyReleased() {
+    if (key == CODED) {
+      if (keyCode == DOWN) {
+        controller2[DIR_DOWN] = false;
+        player.setDirection(DIR_IDLE);
+      }
+
+      //else
+      if (keyCode == RIGHT){
+        controller2[DIR_RIGHT] = false;
+        player.setDirection(DIR_IDLE);
+      }
+
+      //else
+      if (keyCode == UP){
+        controller2[DIR_UP] = false;
+        player.setDirection(DIR_IDLE);
+      }
+
+
+      if (keyCode == LEFT){
+        controller2[DIR_LEFT] = false;
+        player.setDirection(DIR_IDLE);
+      }
+      //
     }
-    //else
-     if (keyCode == RIGHT)
-      controller2[DIR_RIGHT] = true;
+  }
 
-    //else
-     if (keyCode == UP)
-      controller2[DIR_UP] = true;
+  public void keyPressed() {
 
-
-    if (keyCode == LEFT)
-      controller2[DIR_LEFT] = true;
+    if (key == CODED) {
+      if (keyCode == DOWN) {
+        controller2[DIR_DOWN] = true;
+        player.setDirection(DIR_DOWN);
+      }
+      //else
+      if (keyCode == RIGHT) {
+        controller2[DIR_RIGHT] = true;
+        player.setDirection(DIR_RIGHT);
+      }
+      //else
+      if (keyCode == UP) {
+        controller2[DIR_UP] = true;
+        player.setDirection(DIR_UP);
+      }
+      if (keyCode == LEFT) {
+        controller2[DIR_LEFT] = true;
+        player.setDirection(DIR_LEFT);
+      }
     }
   }
 }
@@ -432,34 +480,22 @@ class Menu extends Scene
 
 }
 class Player{
-  Animation animation;
+  Animation animation_move;
+  Animation animation_idle;
   float x;
   float y;
 
   PImage img;
 
   Player(String prefisso_file, int nframes){
-    //animation = new Animation(prefisso_file, nframes);
+    animation_move = new Animation("Sprites\\P1_move", 5);
     img = loadImage("icon.png");
     x = 0;
     y = 0;
   }
 
   public void setDirection(int dir) {
-    switch(dir){
-      case 0:
-        animation.updateDirection("up");
-        break;
-      case 1:
-        animation.updateDirection("down");
-        break;
-      case 2:
-        animation.updateDirection("left");
-        break;
-      case 3:
-        animation.updateDirection("right");
-        break;
-    }
+    animation_move.updateDirection(dir);
   }
 
   public void move(int delta_x, int delta_y, int levelW, int levelH)
@@ -489,7 +525,8 @@ public float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
   {
     if (img != null)
     {
-      image(img, (this.x - camera_x), (this.y - camera_y));
+      animation_move.display((this.x - camera_x), (this.y - camera_y));
+      //image(img, (this.x - camera_x), (this.y - camera_y));
     }
   }
 }

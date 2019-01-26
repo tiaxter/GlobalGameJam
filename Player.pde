@@ -7,27 +7,14 @@ class Player{
   PImage img;
 
   Player(String prefisso_file, int nframes){
-    animation_move = new Animation("Sprites\\P1_move", 6);
+    animation_move = new Animation("Sprites\\P1_move", 5);
     img = loadImage("icon.png");
     x = 0;
     y = 0;
   }
 
   void setDirection(int dir) {
-    switch(dir){
-      case 0:
-        animation_move.updateDirection("up");
-        break;
-      case 1:
-        animation_move.updateDirection("down");
-        break;
-      case 2:
-        animation_move.updateDirection("left");
-        break;
-      case 3:
-        animation_move.updateDirection("right");
-        break;
-    }
+    animation_move.updateDirection(dir);
   }
 
   void move(int delta_x, int delta_y, int levelW, int levelH)

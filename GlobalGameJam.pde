@@ -12,7 +12,7 @@ void setup()
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
     scenes[Constants.GAME_SCENE] = new Game(ratio);
-    
+
     if (!(scenes[Constants.MENU_SCENE].init(this) && scenes[Constants.GAME_SCENE].init(this)))
     {
       print("Error initializing scenes!");
@@ -28,7 +28,7 @@ void draw()
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     if (ratio < 1.0)
     {
-        scale(ratio);
+        //scale(ratio);
         //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
     }
 
@@ -45,6 +45,3 @@ void keyPressed()
 {
   scenes[currentScene].keyPressed();
 }
-
-
-
