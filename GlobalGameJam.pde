@@ -1,3 +1,5 @@
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 float ratio = 0.0;
 PImage img;
@@ -16,15 +18,22 @@ boolean right_pressed;
 boolean up_pressed;
 boolean down_pressed;
 
+private Robot robot;
+
 void setup()
 {
     //fullScreen();
-  player = new Player("test", 1);
-    control = ControlIO.getInstance(this);
+    player = new Player("test", 1);
+    try{
+      robot = new Robot();
+    }catch(Exception e) 
+   {}
+      control = ControlIO.getInstance(this);
     controller = new Controller(control);
     size(500,500);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     img = loadImage("Level 1 Big Base.png");
+    
 }
 
 void draw()
@@ -68,39 +77,41 @@ void setDirection(String dir, boolean x){
   }catch(Exception e){
     xoy = 0;
   }
-  if((dir.equals("DOWN"))||(xoy > 0.5 && !x)){
-    //DOWN
-    //player.setDirection(1);
-    down_pressed = true;
-    up_pressed = false;
-    left_pressed = false;
-    right_pressed = false;
-    println("DOWN");
-  }else if((dir.equals("UP"))||(xoy < -0.5 && !x)){
-    //UP
-    //player.setDirection(0);
-    up_pressed = true;
-    down_pressed = false;
-    left_pressed = false;
-    right_pressed = false;
-    println("UP");
-  }else if((dir.equals("LEFT"))||(xoy < -0.5  && x)){
-    //LEFT
-    //player.setDirection(2);
+  
+  if(xoy > 0.5 && !x)
+  {
+    robot.keyPress(KeyEvent.VK_DOWN);
+  }
+  else
+  {
+    robot.keyRelease(KeyEvent.VK_DOWN);
+  }
 
-    left_pressed = true;
-    down_pressed = false;
-    up_pressed = false;
-    right_pressed = false;
-    println("LEFT");
-  }else if((dir.equals("RIGHT"))||(xoy > 0.5  && x)){
-    //LEFT
-    //player.setDirection(3);
-    right_pressed = true;
-    down_pressed = false;
-    left_pressed = false;
-    up_pressed = false;
-    println("RIGHT");
+  if(xoy < -0.5 && !x)
+  {
+        robot.keyPress(KeyEvent.VK_UP);
+  }
+  else
+  {
+    robot.keyRelease(KeyEvent.VK_UP);
+  }
+
+  if(xoy < -0.5  && x)
+  {
+    robot.keyPress(KeyEvent.VK_LEFT);
+  }else
+  {
+    robot.keyRelease(KeyEvent.VK_LEFT);
+  }
+
+  if(xoy > 0.5  && x)
+  {
+    robot.keyPress(KeyEvent.VK_RIGHT);
+
+  }
+  else
+  {
+    robot.keyRelease(KeyEvent.VK_RIGHT);
   }
 }
 
@@ -155,8 +166,8 @@ void moveCamera(int delta_x, int delta_y)
 
 void keyReleased()
 {
-  //if (key == CODED)
-   {
+  if (key == CODED)
+  {
     if (keyCode == DOWN)
       down_pressed = false;
 
@@ -175,21 +186,22 @@ void keyReleased()
 }
 
 void keyPressed(){
-  if (key == CODED) {
-    if (keyCode == DOWN){
-      setDirection("DOWN", true);
-    }
+
+ if (key == CODED)
+  {
+    if (keyCode == DOWN)
+      down_pressed = true;
+
     //else
-     if (keyCode == RIGHT){
-       setDirection("RIGHT", true);
-     }
+     if (keyCode == RIGHT)
+      right_pressed = true;
+
     //else
-     if (keyCode == UP){
-       setDirection("UP", true);
-     }
-    if (keyCode == LEFT){
-      setDirection("LEFT", true);
-    }
+     if (keyCode == UP)
+      up_pressed = true;
+
+    if (keyCode == LEFT)
+      left_pressed = true;
     //
-  }
+  }  
 }
