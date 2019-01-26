@@ -3,7 +3,7 @@ final int  PLAYER_HEIGHT = 64;
 
 import java.lang.Math;
 
-final int PLAYER_TIME_SLOT = 5000;
+final int PLAYER_TIME_SLOT = 3000;
 
 class Player{
   Animation animation_jonny;

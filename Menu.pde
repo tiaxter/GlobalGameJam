@@ -19,7 +19,7 @@ class Menu extends Scene
   void keyReleased(){
     println("Starting transition...");
     
-    instance.transition(Constants.GAME_SCENE);
+    instance.transition(Constants.GAME_GROUNDFLOOR);
 
   }
 

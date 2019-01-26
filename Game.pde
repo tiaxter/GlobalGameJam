@@ -12,6 +12,8 @@ class Game extends Scene {
   int camera_x = 0;
   int camera_y = 0;
 
+  String mapName;
+  
   static final int DIR_UP = 1;
   static final int DIR_DOWN = 0;
   static final int DIR_LEFT = 2;
@@ -34,15 +36,16 @@ class Game extends Scene {
 
   Ptmx map;
 
-  Game(float ratio) {
+  Game(float ratio, String map) {
     super(ratio);
+    this.mapName = map;
   }
 
   boolean init(PApplet instance) {
     player = new Player("test", 1);
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
-    map = new Ptmx(instance, "Levels/Placeholder/What.tmx");
+    map = new Ptmx(instance, mapName);
     walkableLayerIndex = walkableLayer();
     pupPosition();
     return (player != null && map != null);

@@ -10,6 +10,6 @@ static final int LEVEL_H = 1080*2;
 
 
 static final int MENU_SCENE = 0;
-static final int GAME_SCENE = 1;
-
+static final int GAME_TOPFLOOR = 1;
+static final int GAME_GROUNDFLOOR = 2;
 };
