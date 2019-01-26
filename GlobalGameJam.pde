@@ -10,9 +10,15 @@ int target_scene;
 boolean fade = false;
 float screen_x = 0.0;
 
+PFont myfont;
+
 void setup()
 {
     background(0);
+
+    myfont = createFont("Pixelmania.ttf", 32);
+    textFont(myfont);
+
     fullScreen();
     //size(1024,540);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
@@ -69,6 +75,7 @@ void draw()
       {
         fade = false;
       }
+
     }
 
 }

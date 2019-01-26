@@ -1,7 +1,9 @@
 final int  PLAYER_WIDTH = 64;
 final int  PLAYER_HEIGHT = 64;
 
-final int PLAYER_TIME_SLOT = 4000;
+import java.lang.Math;
+
+final int PLAYER_TIME_SLOT = 5000;
 
 class Player{
   Animation animation_jonny;
@@ -70,6 +72,10 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
 
   void draw(int camera_x, int camera_y)
   {
+    double timer = Math.round(((PLAYER_TIME_SLOT - delta_time) / 1000.0) * 10d) / 10d;
+
+    fill(255,255);
+    text(String.valueOf(timer), 50, 50);
     delta_time += millis() - time;    
     
     if (delta_time > PLAYER_TIME_SLOT)

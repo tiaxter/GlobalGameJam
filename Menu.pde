@@ -7,7 +7,7 @@ class Menu extends Scene
   void draw(){
 
 
-    text("What a lame menu", 10, 10);
+    text("WHAT A LAME MENU", 100, 100);
 
   }
   void keyPressed()
