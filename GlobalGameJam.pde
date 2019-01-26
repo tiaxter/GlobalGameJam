@@ -56,7 +56,7 @@ void draw()
     if (up_pressed)
       moveCamera(0,-5);
 
-    if (down_pressed)    
+    if (down_pressed)
       moveCamera(0,5);
     //player.animation.display();
 }
@@ -68,21 +68,38 @@ void setDirection(String dir, boolean x){
   }catch(Exception e){
     xoy = 0;
   }
-  if(dir.equals("DOWN") || xoy > 0.5 && !x){
+  if((dir.equals("DOWN"))||(xoy > 0.5 && !x)){
     //DOWN
     //player.setDirection(1);
+    down_pressed = true;
+    up_pressed = false;
+    left_pressed = false;
+    right_pressed = false;
     println("DOWN");
-  }else if(dir.equals("UP") || xoy < -0.5 && !x){
+  }else if((dir.equals("UP"))||(xoy < -0.5 && !x)){
     //UP
     //player.setDirection(0);
+    up_pressed = true;
+    down_pressed = false;
+    left_pressed = false;
+    right_pressed = false;
     println("UP");
-  }else if(dir.equals("LEFT") || xoy < -0.5  && x){
+  }else if((dir.equals("LEFT"))||(xoy < -0.5  && x)){
     //LEFT
     //player.setDirection(2);
+
+    left_pressed = true;
+    down_pressed = false;
+    up_pressed = false;
+    right_pressed = false;
     println("LEFT");
-  }else if(dir.equals("RIGHT") || xoy > 0.5  && x){
+  }else if((dir.equals("RIGHT"))||(xoy > 0.5  && x)){
     //LEFT
     //player.setDirection(3);
+    right_pressed = true;
+    down_pressed = false;
+    left_pressed = false;
+    up_pressed = false;
     println("RIGHT");
   }
 }
@@ -126,11 +143,11 @@ void moveCamera(int delta_x, int delta_y)
     }
     else
         player.move(delta_x, delta_y);
-  
-    
+
+
     print("=====\n");
     print(camera_y);
-    print("\n");   
+    print("\n");
     print(camera_x);
     print("\n");
 }
@@ -146,7 +163,7 @@ void keyReleased()
     //else
      if (keyCode == RIGHT)
       right_pressed = false;
-     
+
     //else
      if (keyCode == UP)
       up_pressed = false;
@@ -159,19 +176,20 @@ void keyReleased()
 
 void keyPressed(){
   if (key == CODED) {
-    if (keyCode == DOWN)
-      down_pressed = true;
-
+    if (keyCode == DOWN){
+      setDirection("DOWN", true);
+    }
     //else
-     if (keyCode == RIGHT)
-      right_pressed = true;
-     
+     if (keyCode == RIGHT){
+       setDirection("RIGHT", true);
+     }
     //else
-     if (keyCode == UP)
-      up_pressed = true;
-
-    if (keyCode == LEFT)
-      left_pressed = true;
+     if (keyCode == UP){
+       setDirection("UP", true);
+     }
+    if (keyCode == LEFT){
+      setDirection("LEFT", true);
+    }
     //
   }
 }
