@@ -1,10 +1,27 @@
 class Menu extends Scene
 {
+  GlobalGameJam instance;
+
   Menu(float ratio) {super(ratio);}
-  boolean init(PApplet instance) { return true;}
-  void draw(){}
-  void keyPressed(){}
-  void keyReleased(){}
+  boolean init(PApplet instance) { this.instance = (GlobalGameJam)instance; return true;}
+  void draw(){
+
+
+    text("What a lame menu", 10, 10);
+
+  }
+  void keyPressed()
+  {
+
+
+  }
+
+  void keyReleased(){
+    println("Starting transition...");
+    
+    instance.transition(Constants.GAME_SCENE);
+
+  }
 
 
 }
