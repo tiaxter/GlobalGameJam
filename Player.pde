@@ -28,6 +28,12 @@ class Player{
     time = millis();
   }
 
+  boolean isActive(int currPlayer)
+  {
+    return (currPlayer == 1 && currentPlayer) || (currPlayer == 0 && !currentPlayer);
+
+  }
+
   void setDirection(int dir) {
      if (currentPlayer)
       {
@@ -57,8 +63,8 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
 
   if (y + delta_y >= 0 && y + delta_y <  levelH - 128 - PLAYER_HEIGHT)
     y += delta_y;
-
-    return new float[] {x, y};
+  
+  return new float[] {x, y};
 
 }
 
