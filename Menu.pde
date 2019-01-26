@@ -1,6 +1,6 @@
 class Menu extends Scene
 {
-  Menu() {super();}
+  Menu(float ratio) {super(ratio);}
   boolean init(PApplet instance) { return true;}
   void draw(){}
   void keyPressed(){}

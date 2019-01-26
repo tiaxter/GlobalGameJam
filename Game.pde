@@ -21,11 +21,11 @@ boolean controller2[] = {false, false, false, false};
 
 PImage img;
 
-Game() { super(); }
+
+Game(float ratio) { super(ratio); }
 
 boolean init(PApplet instance)
 {
-    
     player = new Player("test", 1);
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
@@ -44,6 +44,7 @@ void draw()
 
     }
 
+    imageMode(CORNER);
     image(this.img,-camera_x, -camera_y);
     player.draw(camera_x, camera_y);
 
@@ -70,13 +71,7 @@ void setDirection(String dir, boolean x){
   }catch(Exception e){
     xoy = 0;
   }
-  println(xoy);
-  println(x);
-
-  if(x){
-    println(xoy);
-  }
-
+  
   if(!x)
   {
     if(xoy > 0.5){
@@ -134,34 +129,34 @@ void moveCamera(int delta_x, int delta_y)
 
     print(camera_x);
     print("\n");
-    print(delta_x);
+    print(player.x);
     print("\n");
     print(camera_y);
     print("\n");
-    print(delta_y);
+    print(player.y);
     print("\n");
 
-    if (camera_x + delta_x >= 0 && camera_x + delta_x < Constants.LEVEL_W )
+    player.move(delta_x, delta_y);
+
+    if (player.x >= Constants.SCREEN_W / 2 && player.x < Constants.LEVEL_W - Constants.SCREEN_W / 2)
     {
         camera_x = camera_x + delta_x;
-        player.move(delta_x, 0);
     }
-    else
-        player.move(delta_x, delta_y);
 
-    if (camera_y + delta_y >=  0 && camera_y + delta_y < Constants.LEVEL_H)
+    if (player.y >= Constants.SCREEN_H / 2 && player.y < Constants.LEVEL_H - Constants.SCREEN_H / 2)
     {
         camera_y = camera_y + delta_y;
-        player.move(0, delta_y);
     }
-    else
-        player.move(delta_x, delta_y);
 
 
     print("=====\n");
+    print(camera_x);
+    print("\n");
+    print(player.x);
+    print("\n");
     print(camera_y);
     print("\n");
-    print(camera_x);
+    print(player.y);
     print("\n");
 }
 

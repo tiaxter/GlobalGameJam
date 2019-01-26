@@ -6,10 +6,12 @@ int currentScene;
 
 void setup()
 {
-    //fullScreen();
+    fullScreen();
+    //size(1024,540);
+    ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
-    scenes[Constants.MENU_SCENE] = new Menu();
-    scenes[Constants.GAME_SCENE] = new Game();
+    scenes[Constants.MENU_SCENE] = new Menu(ratio);
+    scenes[Constants.GAME_SCENE] = new Game(ratio);
     
     if (!(scenes[Constants.MENU_SCENE].init(this) && scenes[Constants.GAME_SCENE].init(this)))
     {
@@ -18,14 +20,11 @@ void setup()
     }
     currentScene = Constants.GAME_SCENE;
 
-    size(500,500);
-    ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
-
 }
 
 void draw()
 {
-    background(0);
+    background(0xFF0000);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     if (ratio < 1.0)
     {
