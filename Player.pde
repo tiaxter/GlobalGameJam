@@ -40,6 +40,6 @@ class Player{
   void draw(int camera_x, int camera_y)
   {
     if (img != null)
-      image(img, this.x - camera_x, this.y - camera_y);        
+      image(img, this.x - camera_x, this.y - camera_y);
   }
 }

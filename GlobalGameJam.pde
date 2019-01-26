@@ -27,7 +27,7 @@ void setup()
     size(500,500);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
     img = loadImage("Level 1 Big Base.png");
-    
+
 }
 
 void draw()
@@ -71,43 +71,53 @@ void setDirection(String dir, boolean x){
   }catch(Exception e){
     xoy = 0;
   }
-  
-  if(xoy > 0.5 && !x)
+  println(xoy);
+  println(x);
+
+  if(x){
+    println(xoy);
+  }
+
+  if(!x)
   {
-    controller1[DIR_DOWN] = true;
+    if(xoy > 0.5){
+      controller1[DIR_DOWN] = true;
+    }
+    else
+    {
+      controller1[DIR_DOWN] = false;
+    }
+
+    if(xoy < -0.5)
+    {
+      controller1[DIR_UP] = true;
+    }
+    else
+    {
+      controller1[DIR_UP] = false;
+    }
   }
   else
   {
-    controller1[DIR_DOWN] = false;
-  }
+    if(xoy < -0.5)
+    {
+      controller1[DIR_LEFT] = true;
+    }
+    else
+    {
+      controller1[DIR_LEFT] = false;
+    }
 
-  if(xoy < -0.5 && !x)
-  {
-    controller1[DIR_UP] = true;
-  }
-  else
-  {
-    controller1[DIR_UP] = false;
-  }
-
-  if(xoy < -0.5  && x)
-  {
-    controller1[DIR_LEFT] = true;
-  }else
-  {
-    controller1[DIR_LEFT] = false;
-  }
-
-  if(xoy > 0.5  && x)
-  {
-    controller1[DIR_RIGHT] = true;
-  }
-  else
-  {
-    controller1[DIR_RIGHT] = false;
-  }
+    if(xoy > 0.5)
+    {
+      controller1[DIR_RIGHT] = true;
+    }
+    else
+    {
+      controller1[DIR_RIGHT] = false;
+    }
 }
-
+}
 
 void moveCamera(int delta_x, int delta_y)
 {
@@ -123,14 +133,14 @@ void moveCamera(int delta_x, int delta_y)
     //     player.move(0, delta_y);
     // }
 
-    print(camera_x);
-    print("\n");
-    print(delta_x);
-    print("\n");
-    print(camera_y);
-    print("\n");
-    print(delta_y);
-    print("\n");
+    // print(camera_x);
+    // print("\n");
+    // print(delta_x);
+    // print("\n");
+    // print(camera_y);
+    // print("\n");
+    // print(delta_y);
+    // print("\n");
 
     if (camera_x + delta_x >= 0 && camera_x + delta_x < Constants.LEVEL_W )
     {
@@ -149,11 +159,11 @@ void moveCamera(int delta_x, int delta_y)
         player.move(delta_x, delta_y);
 
 
-    print("=====\n");
-    print(camera_y);
-    print("\n");
-    print(camera_x);
-    print("\n");
+    // print("=====\n");
+    // print(camera_y);
+    // print("\n");
+    // print(camera_x);
+    // print("\n");
 }
 
 
@@ -201,6 +211,6 @@ void keyPressed(){
 
 
     if (keyCode == LEFT)
-      controller2[DIR_LEFT] = true; 
-  }  
+      controller2[DIR_LEFT] = true;
+  }
 }
