@@ -19,6 +19,7 @@ class Game extends Scene {
   // Player state 
   Player player;
   boolean accept_inputs;  
+  boolean paused;
   
   // starting view coordinates
   int camera_x = 0;
@@ -88,6 +89,7 @@ class Game extends Scene {
     pupPosition();
     searchExitPositions();
     stairPositions();
+    paused = false;
 
     return (player != null && map != null);
   }
@@ -109,7 +111,8 @@ class Game extends Scene {
         }
 
     }
-
+    
+    paused = false;
     accept_inputs = true;
   }
 
@@ -253,9 +256,14 @@ void stairPositions() {
       setDirection(String.valueOf(controller.LeftAnalogX()), true);
       setDirection(String.valueOf(controller.LeftAnalogY()), false);
 
-      if (controller.StartPressed() || controller.BackPressed())
+      if (controller.BackPressed())
       {
         main_applet.transition(Constants.MENU_SCENE);
+      }
+
+      if (controller.StartPressed())
+      {
+        setPaused(!paused);
       }
 
     } catch (Exception e) {
@@ -266,7 +274,14 @@ void stairPositions() {
     map.draw(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
-
+    if (paused)
+    {
+      fill(100,50);
+      rect(0,0,width,height);
+      fill(255,255);
+      text("PAUSE", 100, 100);
+    }
+    
     if (controller1[DIR_LEFT])
       moveCamera((int)(-10.0 * ratio), 0, 0);
 
@@ -354,11 +369,21 @@ void stairPositions() {
     return (int)(map.getTileSize().y * map.getMapSize().y);
   }
 
+  void setPaused(boolean paused)
+  {
+    this.paused = paused; 
+    player.setPaused(paused);
+  }
 
   void moveCamera(int delta_x, int delta_y, int movement_player) {
 
     if (accept_inputs && !player.isActive(movement_player))
       return;
+
+    if (paused)
+    { 
+      return;
+    }
 
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
@@ -490,6 +515,10 @@ void stairPositions() {
     if (key == 'A' || key == 'a'){
       controller1[DIR_LEFT] = false;
       player.setDirection(DIR_IDLE);
+    }
+
+    if (key == 'P' || key == 'p'){
+      setPaused(!paused);
     }
   }
 

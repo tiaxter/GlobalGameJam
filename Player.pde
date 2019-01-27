@@ -8,6 +8,7 @@ class Player{
   Animation animation_kenny;
 
   int direction;
+  boolean paused;
 
   float x;
   float y;
@@ -33,6 +34,7 @@ class Player{
     animation_jonny.updateDirection(Game.DIR_IDLE);
     animation_kenny.updateDirection(Game.DIR_IDLE);
     time = millis();
+    paused = false;
   }
 
   void loadSounds(PApplet instance)
@@ -69,6 +71,15 @@ class Player{
 
   }
 
+  void setPaused(boolean paused)
+  {
+    this.paused = paused;
+    if(!paused)
+    {
+      time = millis();
+    }
+  }
+
   void setPosition(int x, int y)
   {
     this.x = x;
@@ -83,6 +94,9 @@ class Player{
 
   void setDirection(int dir) {
     
+      if (paused)
+        return;
+
       direction = dir;
 
      if (currentPlayer)
@@ -122,13 +136,16 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
   {
     double timer = Math.round(((PLAYER_TIME_SLOT - delta_time) / 1000.0) * 10d) / 10d;
 
-    fill(0,255);
-    text(String.valueOf(timer), 54, 54);
-    fill(255,255);
-    text(String.valueOf(timer), 50, 50);
-    delta_time += millis() - time;    
+    if(!paused)
+    {
+      fill(0,255);
+      text(String.valueOf(timer), 54, 54);
+      fill(255,255);
+      text(String.valueOf(timer), 50, 50);
     
-    updateStepSound();
+      delta_time += millis() - time;    
+      updateStepSound();
+    }
 
     if (delta_time > PLAYER_TIME_SLOT)
     {
