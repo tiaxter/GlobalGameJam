@@ -6,13 +6,19 @@ class Menu extends Scene
   boolean init(PApplet instance) { this.instance = (GlobalGameJam)instance; return true;}
   void draw(){
 
-
+    background(0);
     text("WHAT A LAME MENU", 100, 100);
 
   }
+
   void keyPressed()
   {
 
+
+  }
+
+  void reset()
+  {
 
   }
 

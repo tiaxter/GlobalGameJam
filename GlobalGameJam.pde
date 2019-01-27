@@ -20,7 +20,6 @@ void setup()
     textFont(myfont);
 
     fullScreen();
-    //size(1024,540);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
@@ -63,17 +62,19 @@ void draw()
         //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
     }
 
+    fill(255,255);
     scenes[currentScene].draw();
 
     if (fade)
     {
-      screen_x += 50.0;
+      screen_x += 40.0;
       fill(50,255);
       rect(screen_x, 0, width, height);
 
       if (screen_x > 0)
       {
         currentScene = target_scene;
+        scenes[currentScene].reset();
       }
 
       if (screen_x > Constants.SCREEN_W)

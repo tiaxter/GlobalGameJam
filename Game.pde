@@ -83,6 +83,23 @@ class Game extends Scene {
     return (player != null && map != null);
   }
 
+
+  void reset()
+  {
+    camera_x = camera_y = 0;
+    if(mapId == Constants.GAME_TOPFLOOR)
+    {
+      player.setPosition(START_X_TOPFLOOR, START_Y_TOPFLOOR);
+    }
+    else 
+    {
+        if(mapId == Constants.GAME_GROUNDFLOOR){
+        player.setPosition(START_X_GROUNDFLOOR ,START_Y_GROUNDFLOOR);
+        }
+
+    }
+  }
+
   int searchLayer(String str) {
     int layerindex = 0;
     int maplayer[];

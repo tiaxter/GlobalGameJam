@@ -6,4 +6,5 @@ class Scene
   void draw() {}
   void keyPressed(){}
   void keyReleased(){}
+   void reset(){}
 };
