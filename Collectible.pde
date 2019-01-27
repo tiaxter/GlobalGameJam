@@ -24,6 +24,11 @@ class Collectible{
     "\nTipo di oggetto : " + collectible_type;
   }
 
+  void resetStatus()
+  {
+    picked = false;
+  }
+
   void draw(int camera_x, int camera_y)
   {
     if (!picked)

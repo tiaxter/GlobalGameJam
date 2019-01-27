@@ -1,6 +1,6 @@
 import java.lang.Math;
 
-int PLAYER_TIME_SLOT[] = { 3000, 3000 };
+int PLAYER_TIME_SLOT[] = { Constants.DEFAULT_TIMER, Constants.DEFAULT_TIMER };
 
 class Player{
 
@@ -35,6 +35,11 @@ class Player{
     animation_kenny.updateDirection(Game.DIR_IDLE);
     time = millis();
     paused = false;
+  }
+
+  void resetTimers()
+  {
+    PLAYER_TIME_SLOT[0] = PLAYER_TIME_SLOT[1] = Constants.DEFAULT_TIMER;
   }
 
   void loadSounds(PApplet instance)

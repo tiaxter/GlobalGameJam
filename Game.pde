@@ -110,6 +110,14 @@ class Game extends Scene {
 
     }
 
+    player.resetTimers();
+    
+    // Map parsing
+    for (Collectible c : oggettiCollezionabili)
+    {
+      c.resetStatus();
+    }
+    
     paused = false;
     accept_inputs = true;
   }
@@ -307,7 +315,7 @@ void stairPositions() {
       else
       {
         text(currentNote, 100, 150);     
-        text("PREMI P o START PER CONTINUARE", 0, main_applet.height - 100);
+        text("PREMI P o START PER CONTINUARE", 100, main_applet.height - 100);
       }
     }
 

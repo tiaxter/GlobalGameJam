@@ -24,4 +24,6 @@ static final int VIDEO_H = 720;
 static final int JONNY = 1;
 static final int KENNY = 0;
 
+static final int DEFAULT_TIMER = 3000;
+
 };
