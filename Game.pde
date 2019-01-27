@@ -254,8 +254,10 @@ void stairPositions() {
   void draw() {
 
     try {
-      setDirection(String.valueOf(controller.LeftAnalogX()), true);
-      setDirection(String.valueOf(controller.LeftAnalogY()), false);
+      setDirection(String.valueOf(controller.LeftAnalogX()), true, false);
+      setDirection(String.valueOf(controller.LeftAnalogY()), false, false);
+      setDirection(String.valueOf(controller.RightAnalogX()), true, true);
+      setDirection(String.valueOf(controller.RightAnalogY()), false, true);
 
       if (controller.BackPressed())
       {
@@ -315,6 +317,7 @@ void stairPositions() {
 
   }
 
+void setDirection(String dir, boolean x, boolean right) {
     float xoy;
     try {
       xoy = Float.valueOf(dir);
@@ -322,46 +325,90 @@ void stairPositions() {
       xoy = 0;
     }
 
-    if (!x) {
-      if (xoy > 0.5) {
-        controller1[DIR_DOWN] = true;
-        player.setDirection(DIR_DOWN);
-      } else {
-        if (controller1[DIR_DOWN] == true)
-          player.setDirection(DIR_IDLE);
+    if(!right){
+      if (!x) {
+        if (xoy > 0.5) {
+          controller1[DIR_DOWN] = true;
+          player.setDirection(DIR_DOWN);
+        } else {
+          if (controller1[DIR_DOWN] == true)
+            player.setDirection(DIR_IDLE);
 
-        controller1[DIR_DOWN] = false;
+          controller1[DIR_DOWN] = false;
+        }
+
+        if (xoy < -0.5) {
+          controller1[DIR_UP] = true;
+          player.setDirection(DIR_UP);
+        } else {
+          if (controller1[DIR_UP] == true)
+            player.setDirection(DIR_IDLE);
+
+          controller1[DIR_UP] = false;
+        }
+      } else {
+        if (xoy < -0.5) {
+          controller1[DIR_LEFT] = true;
+          player.setDirection(DIR_LEFT);
+        } else {
+          if (controller1[DIR_LEFT] == true)
+            player.setDirection(DIR_IDLE);
+
+          controller1[DIR_LEFT] = false;
+        }
+
+        if (xoy > 0.5) {
+          controller1[DIR_RIGHT] = true;
+          player.setDirection(DIR_RIGHT);
+        } else {
+          if (controller1[DIR_RIGHT] == true)
+            player.setDirection(DIR_IDLE);
+          controller1[DIR_RIGHT] = false;
+        }
       }
+    }else{
+      if (!x) {
+        if (xoy > 0.5) {
+          controller2[DIR_DOWN] = true;
+          player.setDirection(DIR_DOWN);
+        } else {
+          if (controller2[DIR_DOWN] == true)
+            player.setDirection(DIR_IDLE);
 
-      if (xoy < -0.5) {
-        controller1[DIR_UP] = true;
-        player.setDirection(DIR_UP);
+          controller2[DIR_DOWN] = false;
+        }
+
+        if (xoy < -0.5) {
+          controller2[DIR_UP] = true;
+          player.setDirection(DIR_UP);
+        } else {
+          if (controller2[DIR_UP] == true)
+            player.setDirection(DIR_IDLE);
+
+          controller2[DIR_UP] = false;
+        }
       } else {
-        if (controller1[DIR_UP] == true)
-          player.setDirection(DIR_IDLE);
+        if (xoy < -0.5) {
+          controller2[DIR_LEFT] = true;
+          player.setDirection(DIR_LEFT);
+        } else {
+          if (controller2[DIR_LEFT] == true)
+            player.setDirection(DIR_IDLE);
 
-        controller1[DIR_UP] = false;
-      }
-    } else {
-      if (xoy < -0.5) {
-        controller1[DIR_LEFT] = true;
-        player.setDirection(DIR_LEFT);
-      } else {
-        if (controller1[DIR_LEFT] == true)
-          player.setDirection(DIR_IDLE);
+          controller2[DIR_LEFT] = false;
+        }
 
-        controller1[DIR_LEFT] = false;
-      }
-
-      if (xoy > 0.5) {
-        controller1[DIR_RIGHT] = true;
-        player.setDirection(DIR_RIGHT);
-      } else {
-        if (controller1[DIR_RIGHT] == true)
-          player.setDirection(DIR_IDLE);
-        controller1[DIR_RIGHT] = false;
+        if (xoy > 0.5) {
+          controller2[DIR_RIGHT] = true;
+          player.setDirection(DIR_RIGHT);
+        } else {
+          if (controller2[DIR_RIGHT] == true)
+            player.setDirection(DIR_IDLE);
+          controller2[DIR_RIGHT] = false;
+        }
       }
     }
+
   }
 
 

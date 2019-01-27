@@ -3,9 +3,9 @@
  <tileset firstgid="1" name="wood" tilewidth="192" tileheight="192" tilecount="144" columns="12">
   <image source="Levels/PianoT/Tilleset_Wood.png" width="2304" height="2304"/>
  </tileset>
- <tileset firstgid="145" source="Props.tsx"/>
- <tileset firstgid="289" source="Walkable.tsx"/>
- <tileset firstgid="290" source="Stairs.tsx"/>
+ <tileset firstgid="145" source="Levels/PianoT/Props.tsx"/>
+ <tileset firstgid="289" source="Levels/PianoT/Walkable.tsx"/>
+ <tileset firstgid="290" source="Levels/PianoT/Stairs.tsx"/>
  <layer id="3" name="Floor" width="25" height="25">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
