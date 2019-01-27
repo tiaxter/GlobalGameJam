@@ -21,6 +21,8 @@ class Game extends Scene {
   Player player;
   boolean accept_inputs;
   boolean paused;
+  boolean showNote;
+  String currentNote;
   float timePauseStart = 0;
 
   // starting view coordinates
@@ -284,6 +286,7 @@ void stairPositions() {
       {
         if (millis() - timePauseStart > 500)
         {
+           
            setPaused(!paused);
            timePauseStart = millis();
         }
@@ -298,13 +301,19 @@ void stairPositions() {
     drawObjects(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
-
     if (paused)
     {
-      fill(100,50);
+      fill(50,170);
       rect(0,0,width,height);
       fill(255,255);
-      text("PAUSE", 100, 100);
+      if (!showNote)
+      {
+        text("PAUSE", 100, 100);
+      }
+      else
+      {
+        text(currentNote, 50, 150);     
+      }
     }
 
     if (controller1[DIR_LEFT])
@@ -440,6 +449,11 @@ void setDirection(String dir, boolean x, boolean right) {
 
   void setPaused(boolean paused)
   {
+    if (this.paused && showNote)
+    {
+        showNote = false;
+    }
+
     this.paused = paused;
     player.setPaused(paused);
   }
@@ -519,11 +533,11 @@ void setDirection(String dir, boolean x, boolean right) {
     if (isWalkable(next_player_tile_x, next_player_tile_y)) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
-      if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2) {
+      if (player.x >= main_applet.width / 2 && player.x < getTileMapWidth() - main_applet.width / 2) {
         camera_x = camera_x + delta_x;
       }
 
-      if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
+      if (player.y >= main_applet.height / 2 && player.y < getTileMapHeight() - main_applet.height / 2) {
         camera_y = camera_y + delta_y;
       }
 
@@ -652,18 +666,27 @@ void setDirection(String dir, boolean x, boolean right) {
     {
         if (c.isColliding(player_x, player_y))
         {
+            if (!c.picked)
+            {
+              handlePickedObject(c.collectible_type, currentPlayer, c.getText(currentPlayer? 1 : 0));
+            }
+            
             c.setPicked(true);
-            handlePickedObject(c.collectible_type, currentPlayer);
         }
     }
   }
 
-  void handlePickedObject(int collectible_id, boolean currentPlayer)
+  void handlePickedObject(int collectible_id, boolean currentPlayer, String text)
   {
       if(currentPlayer)
         println("Raccolto elemento " + collectible_id + " da Jonny");
       else
         println("Raccolto elemento " + collectible_id + " da Kenny");
+
+      currentNote = text;
+      showNote = true;
+      paused = true;
+      player.setPaused(true);
   }
 
 

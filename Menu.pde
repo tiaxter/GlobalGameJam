@@ -68,7 +68,7 @@ class Menu extends Scene
       image(secondVideo, 0, 0);
     }
     
-    text("WHAT A LAME MENU", 100, 100);
+    text("GOING HOME", 100, 100);
 
     popMatrix();    
   }

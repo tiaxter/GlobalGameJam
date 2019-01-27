@@ -23,7 +23,7 @@ void setup()
     myfont = createFont("Pixelmania.ttf", 32);
     textFont(myfont);
 
-    fullScreen();
+    size(1920,1080);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
@@ -42,8 +42,7 @@ void setup()
     currentScene = Constants.MENU_SCENE;
 
     music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");
-    music.amp(0.5);
-    music.loop();
+    music.amp(0.2);
 
 }
 
@@ -80,8 +79,14 @@ void draw()
       rect(screen_x, 0, width, height);
 
       if (screen_x > 0)
-      {
+      {        
         currentScene = target_scene;
+        
+        if(target_scene == GAME_GROUNDFLOOR)
+          music.loop();
+        else
+          music.stop()
+        
         scenes[currentScene].reset();
       }
 

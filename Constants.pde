@@ -21,4 +21,7 @@ static final int  PLAYER_HEIGHT = 192;
 static final int VIDEO_W = 1280;
 static final int VIDEO_H = 720;
 
+static final int JONNY = 1;
+static final int KENNY = 0;
+
 };
