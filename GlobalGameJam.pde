@@ -41,7 +41,7 @@ void setup()
     }
     currentScene = Constants.MENU_SCENE;
 
-    music = new SoundFile(this, "Sounds/RumoreBiancoCasa.mp3");
+    music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");
     music.amp(0.5);
     music.loop();
 

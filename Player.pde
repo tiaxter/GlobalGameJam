@@ -24,7 +24,9 @@ class Player{
     animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
     animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
     img = loadImage("icon.png");
-    setDirection(Game.DIR_IDLE);
+
+    animation_jonny.updateDirection(Game.DIR_IDLE);
+    animation_kenny.updateDirection(Game.DIR_IDLE);
     time = millis();
   }
 
@@ -100,7 +102,6 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
       {
         animation_kenny.display((this.x - camera_x), (this.y - camera_y));
       }
-      //image(img, (this.x - camera_x), (this.y - camera_y));
     }
   }
 }
