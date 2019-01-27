@@ -14,7 +14,7 @@ class Collectible{
     this.mapy = mapy;
     this.collectible_type = collectible_type;
     this.picked = picked;
-    this.image = loadImage("icon.png");
+    this.image = loadImage("letter.png");
   }
 
   @Override
