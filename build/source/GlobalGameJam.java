@@ -313,6 +313,50 @@ static final int VIDEO_H = 720;
   }
 
 }
+class Door
+{
+  float absx;
+  float absy;
+  float mapx;
+  float mapy;
+  boolean opened;
+  PImage image;
+
+  Door(float absx, float absy, float mapx, float mapy, boolean opened){
+    this.absx = absx;
+    this.absy = absy;
+    this.mapx = mapx;
+    this.mapy = mapy;
+    this.opened = opened;
+    this.image = loadImage("icon.png");
+  }
+
+  public @Override
+  String toString(){
+    return "Absolute X : " + absx + "\nAbsolute Y: " + absy +
+    "\nMap X : " + mapx + "\nMap Y : " + mapy +
+    "\nPorta aperta: " + opened;
+  }
+
+  public void draw(int camera_x, int camera_y)
+  {
+    if (!opened)
+    {
+      image(image, this.absx - camera_x, this.absy - camera_y);
+    }
+  }
+
+  public boolean isColliding(int grid_x, int grid_y)
+  {
+    return grid_x == this.mapx && grid_y == this.mapy; 
+  }
+
+  public void setOpened(boolean p)
+  {
+    this.opened = p;
+  }
+
+}
 class Exit
 {
   int x_start, y_start, x_end, y_end;
@@ -389,7 +433,7 @@ class Game extends Scene {
   // Map parsing
   ArrayList<Collectible> oggettiCollezionabili = new ArrayList<Collectible>();
   static final int PuP = 3;
-
+  ArrayList<Door> porte = new ArrayList<Door>();
   ArrayList<Exit> exitPositions = new ArrayList<Exit>();
 
   int walkableLayerIndex;
@@ -1026,6 +1070,18 @@ public void setDirection(String dir, boolean x, boolean right) {
         println("Raccolto elemento " + collectible_id + " da Kenny");
   }
 
+
+  public boolean isDoorClosed(int x, int y)
+  {
+    for(Door d : porte)
+    {
+        if (d.isColliding(x, y))
+        {
+            return (!d.opened);
+        }
+    }
+    return false;
+  }
 
 }
 class GameOver extends Scene
