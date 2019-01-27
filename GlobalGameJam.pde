@@ -1,6 +1,9 @@
+
+import processing.sound.*;
 float ratio = 0.0;
 
 Scene scenes[] = { null, null, null, null};
+SoundFile music;
 
 final int FADEOUT_TIME_MS = 1000;
 
@@ -9,6 +12,7 @@ int target_scene;
 
 boolean fade = false;
 float screen_x = 0.0;
+
 
 PFont myfont;
 
@@ -36,6 +40,10 @@ void setup()
       System.exit(-1);
     }
     currentScene = Constants.MENU_SCENE;
+
+    music = new SoundFile(this, "Sounds/RumoreBiancoCasa.mp3");
+    music.amp(0.5);
+    music.loop();
 
 }
 
