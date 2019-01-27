@@ -72,9 +72,27 @@ class Menu extends Scene
     
     text("PREMI UN TASTO PER INIZIARE", 100, Constants.VIDEO_H - 100);
 
-    popMatrix();    
+    popMatrix(); 
+
+    try {
+      
+      if (instance.controller.Apressed() || 
+          instance.controller.Bpressed() || 
+          instance.controller.Xpressed() || 
+          instance.controller.Ypressed() || 
+          instance.controller.StartPressed() ||
+          instance.controller.BackPressed() || 
+          instance.controller.LBpressed() ||
+          instance.controller.RBpressed())
+          {
+              keyPressed();
+              keyReleased();
+          }
+    }
+    catch(Exception e){}
   }
-  
+
+
   void endTransition()
   {
     println("End transition menu");
