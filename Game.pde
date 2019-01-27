@@ -65,7 +65,7 @@ class Game extends Scene {
   }
 
   boolean init(PApplet instance) {
-    player = new Player("test", 1);
+    player = new Player(instance);
 
     main_applet = (GlobalGameJam)instance;
 

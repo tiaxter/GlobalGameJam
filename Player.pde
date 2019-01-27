@@ -15,15 +15,19 @@ class Player{
   float time = 0;
   float delta_time = 0.0f;
 
+  SoundFile steps_jonny[];
+  SoundFile steps_kenny[];
+
+  SoundFile currentStepSound;
+
   // Used to switch between the players
   boolean currentPlayer = true;
 
-  PImage img;
-
-  Player(String prefisso_file, int nframes){
+  Player(PApplet instance){
     animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
     animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
-    img = loadImage("icon.png");
+
+    loadSounds(instance);
 
     direction = Game.DIR_IDLE;
     animation_jonny.updateDirection(Game.DIR_IDLE);
@@ -31,6 +35,39 @@ class Player{
     time = millis();
   }
 
+  void loadSounds(PApplet instance)
+  {
+      steps_jonny = new SoundFile[4];
+      steps_kenny = new SoundFile[4];
+
+      steps_jonny[0] = new SoundFile(instance, "Sounds\\passi_bambino_4.wav");
+      steps_jonny[1] = new SoundFile(instance, "Sounds\\passi_bambino_3_01.wav");
+      steps_jonny[2] = new SoundFile(instance, "Sounds\\passi_bambino_2.wav");
+      steps_jonny[3] = new SoundFile(instance, "Sounds\\passi_bambino_1.wav");
+
+      steps_kenny[0] = new SoundFile(instance, "Sounds\\passi_bambino_distorto_4.wav");
+      steps_kenny[1] = new SoundFile(instance, "Sounds\\passi_bambino_distorto_3.wav");
+      steps_kenny[2] = new SoundFile(instance, "Sounds\\passi_bambino_distorto_2.wav");
+      steps_kenny[3] = new SoundFile(instance, "Sounds\\passi_bambino_distorto_1.wav");
+  }
+
+  void updateStepSound()
+  {
+    if (direction != Game.DIR_IDLE)
+    {
+      if ((currentStepSound != null && !currentStepSound.isPlaying()) || currentStepSound == null)
+      {
+        int rand_step = (int)(Math.random() * 10) % 4;
+        if (currentPlayer)
+          currentStepSound = steps_jonny[rand_step];
+        else 
+          currentStepSound = steps_kenny[rand_step];
+     
+        currentStepSound.play();
+      }
+    }
+
+  }
 
   void setPosition(int x, int y)
   {
@@ -89,6 +126,8 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
     text(String.valueOf(timer), 50, 50);
     delta_time += millis() - time;    
     
+    updateStepSound();
+
     if (delta_time > PLAYER_TIME_SLOT)
     {
       currentPlayer = !currentPlayer;   
@@ -97,16 +136,13 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
     }
     time = millis();
 
-    if (img != null)
+    if (currentPlayer)
     {
-      if (currentPlayer)
-      {
-        animation_jonny.display((this.x - camera_x), (this.y - camera_y));
-      }
-      else 
-      {
-        animation_kenny.display((this.x - camera_x), (this.y - camera_y));
-      }
+      animation_jonny.display((this.x - camera_x), (this.y - camera_y));
+    }
+    else 
+    {
+      animation_kenny.display((this.x - camera_x), (this.y - camera_y));
     }
   }
 }
