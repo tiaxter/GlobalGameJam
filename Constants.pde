@@ -18,4 +18,7 @@ static final int GAME_OVER = 3;
 static final int  PLAYER_WIDTH = 192;
 static final int  PLAYER_HEIGHT = 192;
 
+static final int VIDEO_W = 1280;
+static final int VIDEO_H = 720;
+
 };

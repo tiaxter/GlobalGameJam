@@ -92,6 +92,8 @@ class Game extends Scene {
     return (player != null && map != null);
   }
 
+  void endTransition()
+  {}
 
   void reset()
   {
@@ -250,6 +252,12 @@ void stairPositions() {
     try {
       setDirection(String.valueOf(controller.LeftAnalogX()), true);
       setDirection(String.valueOf(controller.LeftAnalogY()), false);
+
+      if (controller.StartPressed() || controller.BackPressed())
+      {
+        main_applet.transition(Constants.MENU_SCENE);
+      }
+
     } catch (Exception e) {
       //print(e);
 
@@ -486,6 +494,12 @@ void stairPositions() {
   }
 
   void keyPressed() {
+
+    if (key == ESC)
+    {
+      main_applet.transition(Constants.MENU_SCENE);
+      key = 0;
+    }
 
     if (key == CODED) {
       if (keyCode == DOWN) {

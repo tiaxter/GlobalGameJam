@@ -16,6 +16,9 @@ class GameOver extends Scene
 
   }
   
+  void endTransition()
+  {}
+  
   void reset()
   {
 

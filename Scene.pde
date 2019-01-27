@@ -7,4 +7,5 @@ class Scene
   void keyPressed(){}
   void keyReleased(){}
    void reset(){}
+   void endTransition() {}
 };

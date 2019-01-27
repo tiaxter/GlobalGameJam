@@ -122,6 +122,8 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
   {
     double timer = Math.round(((PLAYER_TIME_SLOT - delta_time) / 1000.0) * 10d) / 10d;
 
+    fill(0,255);
+    text(String.valueOf(timer), 54, 54);
     fill(255,255);
     text(String.valueOf(timer), 50, 50);
     delta_time += millis() - time;    

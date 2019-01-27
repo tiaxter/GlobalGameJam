@@ -34,11 +34,9 @@ class Menu extends Scene
   void reset()
   {
     moviePlaying = 0;
-    secondVideo.stop();
-    firstVideo.stop();
     firstVideo.play();
-
     moviePlaying = 1;
+
   }
 
   void firstVideoCompleted()
@@ -52,16 +50,11 @@ class Menu extends Scene
   void draw(){
 
     background(0);
-    // println(moviePlaying);
-    // if (moviePlaying == 1)
-    // {
-    //   image(firstVideo, 0, 0);
-    // }
-    // else if (moviePlaying == 2)
-    // {
-    //   image(secondVideo, 0, 0);
-    // }
     
+    pushMatrix();
+    //scale(ratio);
+    translate(((float)instance.width - Constants.VIDEO_W) / 2.0, (((float)instance.height - Constants.VIDEO_H)/ 2.0));
+
     if (moviePlaying == 1)
     {
       if (firstVideo.available())
@@ -76,23 +69,24 @@ class Menu extends Scene
     }
     
     text("WHAT A LAME MENU", 100, 100);
-    
+
+    popMatrix();    
+  }
+  
+  void endTransition()
+  {
+    println("End transition menu");
   }
 
-  // void movieEvent(Movie m)
-  // {
-  //   m.read();
-  // }
-  
   void keyPressed()
   {
-
-
+    secondVideo.stop();
+    firstVideo.stop();
   }
 
   void keyReleased(){
     println("Starting transition...");
-    
+    moviePlaying = 0;
     instance.transition(Constants.GAME_GROUNDFLOOR);
 
   }

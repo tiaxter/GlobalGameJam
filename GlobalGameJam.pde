@@ -63,12 +63,12 @@ void draw()
 {
 
 
-    ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
-    if (ratio < 1.0)
-    {
-        //scale(3.0);
-        //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
-    }
+    // ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
+    // if (ratio < 1.0)
+    // {
+    //     //scale(3.0);
+    //     //translate(((float)width - Constants.SCREEN_W * ratio) / 2.0, ((float)height - Constants.SCREEN_H * ratio / 2.0));
+    // }
 
     fill(255,255);
     scenes[currentScene].draw();
@@ -85,9 +85,10 @@ void draw()
         scenes[currentScene].reset();
       }
 
-      if (screen_x > Constants.SCREEN_W)
+      if (screen_x > width)
       {
         fade = false;
+        scenes[currentScene].endTransition();
       }
 
     }
