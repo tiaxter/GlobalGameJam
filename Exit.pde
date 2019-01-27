@@ -9,7 +9,6 @@ class Exit
       this.y_start = y_start;
       this.x_end = x_end;
       this.y_end = y_end ; 
-      println("Added exit " + this.toString());
   }
 
   boolean isPlayerOverArea(int player_x, int player_y)

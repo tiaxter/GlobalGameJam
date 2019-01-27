@@ -2,22 +2,27 @@ import ptmx.*;
 import java.awt.Dimension;
 
 class Game extends Scene {
+
+  // Map container
+  Ptmx map;
+  String mapName;
+  int mapId;
+
+  // Map parsing
   ArrayList<Collectible> oggettiCollezionabili = new ArrayList<Collectible>();
   static final int PuP = 3;
 
   ArrayList<Exit> exitPositions = new ArrayList<Exit>();
 
-  Controller controller;
-  ControlIO control;
-  Player player;
-  
   int walkableLayerIndex;
 
+  // Player state 
+  Player player;
+  boolean accept_inputs;  
+  
+  // starting view coordinates
   int camera_x = 0;
   int camera_y = 0;
-
-  String mapName;
-  int mapId;
 
   static final int DIR_UP = 1;
   static final int DIR_DOWN = 0;
@@ -25,7 +30,7 @@ class Game extends Scene {
   static final int DIR_RIGHT = 3;
   static final int DIR_IDLE = 4;
 
-
+  // Spawn points
   static final int START_X_TOPFLOOR = 192 * 3;
   static final int START_Y_TOPFLOOR = 192 * 3;
 
@@ -33,12 +38,17 @@ class Game extends Scene {
   static final int START_Y_GROUNDFLOOR = 192 * 3;
 
 
+  // Controller and status
+  Controller controller;
+  ControlIO control;
+
   boolean controller1[] = {
     false,
     false,
     false,
     false
   };
+
   boolean controller2[] = {
     false,
     false,
@@ -46,7 +56,6 @@ class Game extends Scene {
     false
   };
 
-  Ptmx map;
   GlobalGameJam main_applet;
 
   Game(float ratio, String map, int idMap) {
@@ -98,6 +107,8 @@ class Game extends Scene {
         }
 
     }
+
+    accept_inputs = true;
   }
 
   int searchLayer(String str) {
@@ -244,8 +255,6 @@ void stairPositions() {
 
     }
 
-    imageMode(CORNER);
-
     map.draw(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
@@ -340,31 +349,74 @@ void stairPositions() {
 
   void moveCamera(int delta_x, int delta_y, int movement_player) {
 
-    if (!player.isActive(movement_player))
+    if (accept_inputs && !player.isActive(movement_player))
       return;
 
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
+    int curr_player_tile_x = (int)((player.x + Constants.PLAYER_WIDTH  / 2) / map.getTileSize().x);
+    int curr_player_tile_y = (int)((player.y + Constants.PLAYER_HEIGHT / 2) / map.getTileSize().y);
+
+    int next_player_tile_x = (int)((xy[0] + Constants.PLAYER_WIDTH  / 2) / map.getTileSize().x);
+    int next_player_tile_y = (int)((xy[1] + Constants.PLAYER_HEIGHT / 2) / map.getTileSize().y);
+    
+
+    // Check for exits and ladders
     for(Exit e: exitPositions)
     {
-      if(e.isPlayerOverArea((int)(xy[0]/ map.getTileSize().x), (int)(xy[1]/ map.getTileSize().y)))
+
+      // Stairs checks... movement can only be horizontal
+      if (e instanceof Ladder)
       {
-        if (movement_player == 0 && e instanceof Ladder && e.isGameOver((int)(xy[0]/ map.getTileSize().x), (int)(xy[1]/ map.getTileSize().y)))
+        // Moving away from an exit tile
+        if(!e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+        {
+          // to a standard tile
+          if(e.isPlayerOverArea(curr_player_tile_x, curr_player_tile_y))
+          {
+
+            // If next move takes the player away from the stairs, prevent it unless you're moving horizontally
+            if (player.direction != Game.DIR_LEFT || player.direction != Game.DIR_RIGHT);
+            {
+              println("From ladder to standard blocked...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + ")");
+              return;
+            } 
+          }
+        }
+
+        // Moving over a ladder tile
+        if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+        {
+          if (player.direction != Game.DIR_LEFT && player.direction != Game.DIR_RIGHT)
+          {
+            println("Going to ladder with wrong direction...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + "), " +  player.direction);
+            return;
+          }
+        }
+      }
+
+      // Moving towards an exit tile
+      if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+      {
+        // Win conditions for each player
+        if (movement_player == 0 && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
         {
           println("GAME OVER: Player 1 wins");
           main_applet.transition(Constants.GAME_OVER);
+          accept_inputs = false;
         }
         
         if(movement_player == 1 && !(e instanceof Ladder))
         {
           main_applet.transition(Constants.GAME_OVER);
           println("GAME OVER: Player 2 wins");
+          accept_inputs = false;
         }
       }
-
     }
 
-    if (isWalkable((int)(xy[0] / map.getTileSize().x), (int)(xy[1] / map.getTileSize().y))) {
+    // Check ground collisions
+    if (isWalkable(next_player_tile_x, next_player_tile_y)) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
       if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2) {
@@ -376,8 +428,11 @@ void stairPositions() {
       }
 
     }
+    else
+    {
+      println("Going to non walkable...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + ")");
+    }
   }
-
 
   void keyReleased() {
     if (key == CODED) {

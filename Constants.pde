@@ -13,4 +13,9 @@ static final int MENU_SCENE = 0;
 static final int GAME_TOPFLOOR = 1;
 static final int GAME_GROUNDFLOOR = 2;
 static final int GAME_OVER = 3;
+
+
+static final int  PLAYER_WIDTH = 192;
+static final int  PLAYER_HEIGHT = 192;
+
 };
