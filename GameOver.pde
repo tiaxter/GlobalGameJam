@@ -7,8 +7,11 @@ class GameOver extends Scene
   void draw(){
     background(0);
 
-    text("WHAT A LAME GAME OVER", 100, 100);
-
+    if (instance.getLastWinner() == Constants.JONNY)
+      text("JONNY E' RIUSCITO A RIMANERE A CASA!", 100, 100);
+    else
+      text("KENNY E' RIUSCITO A RAGGIUNGERE LA LIBERTA'!", 100, 100);
+  
   }
   void keyPressed()
   {

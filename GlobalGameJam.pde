@@ -13,6 +13,7 @@ int target_scene;
 boolean fade = false;
 float screen_x = 0.0;
 
+int lastWinner = 0;
 
 PFont myfont;
 
@@ -23,11 +24,11 @@ void setup()
     myfont = createFont("Pixelmania.ttf", 36);
     textFont(myfont);
 
-    size(1920,1080);
+    size(1920, 1080);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
-    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Placeholder/What.tmx", Constants.GAME_TOPFLOOR);
+    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Piano1/Piano1.tmx", Constants.GAME_TOPFLOOR);
     scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx", Constants.GAME_GROUNDFLOOR);
     scenes[Constants.GAME_OVER] = new GameOver(ratio);
 
@@ -42,7 +43,7 @@ void setup()
     currentScene = Constants.MENU_SCENE;
 
     music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");
-    music.amp(0.2);
+    music.amp(0.2); 
 
 }
 
@@ -57,6 +58,15 @@ void transition(int nextScene)
   }
 }
 
+void setLastWinner(int winner)
+{
+  lastWinner = winner;
+}
+
+int getLastWinner()
+{
+  return lastWinner;
+}
 
 void draw()
 {

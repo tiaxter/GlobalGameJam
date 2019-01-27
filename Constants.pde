@@ -1,7 +1,7 @@
 
 class Constants{
   
-static final int SCREEN_W = 2048;
+static final int SCREEN_W = 1920;
 static final int SCREEN_H = 1080;
 
 

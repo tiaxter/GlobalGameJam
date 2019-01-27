@@ -68,9 +68,9 @@ class Menu extends Scene
       image(secondVideo, 0, 0);
     }
     
-    text("THE PLACE\nWHERE I BELONG", 100, 100);
+    text("THE PLACE\nWHERE I BELONG", 50, 50);
     
-    text("PREMI UN TASTO PER INIZIARE", 0, height - 100);
+    text("PREMI UN TASTO PER INIZIARE", 100, Constants.VIDEO_H - 100);
 
     popMatrix();    
   }

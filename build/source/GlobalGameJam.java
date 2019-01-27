@@ -45,7 +45,7 @@ public void setup()
 {
     background(0);
 
-    myfont = createFont("Pixelmania.ttf", 32);
+    myfont = createFont("Pixelmania.ttf", 50);
     textFont(myfont);
 
     

@@ -170,7 +170,7 @@ class Game extends Scene {
 
 
 void searchExitPositions() {
-  final int MAX_EXITS = 2;
+  final int MAX_EXITS = 4;
   for (int layer = 1; layer <= MAX_EXITS; layer++) {
     String layerName = "Exit" + layer;
     int layerIndex = searchLayer(layerName);
@@ -514,17 +514,19 @@ void setDirection(String dir, boolean x, boolean right) {
       if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
       {
         // Win conditions for each player
-        if (movement_player == 0 && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
+        if (movement_player == Constants.JONNY && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
         {
-          println("GAME OVER: Player 1 wins");
+          main_applet.setLastWinner(Constants.JONNY);
+          println("GAME OVER: Jonny wins");
           main_applet.transition(Constants.GAME_OVER);
           accept_inputs = false;
         }
 
-        if(movement_player == 1 && !(e instanceof Ladder))
+        if(movement_player == Constants.KENNY && !(e instanceof Ladder))
         {
+          main_applet.setLastWinner(Constants.KENNY);
           main_applet.transition(Constants.GAME_OVER);
-          println("GAME OVER: Player 2 wins");
+          println("GAME OVER: Kenny wins");
           accept_inputs = false;
         }
       }
