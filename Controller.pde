@@ -40,7 +40,7 @@ import net.java.games.input.*;
   }
 
    boolean StartPressed(){
-    return stick.getButton("Back").pressed();
+    return stick.getButton("Start").pressed();
   }
 
    float LeftAnalogX(){

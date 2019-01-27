@@ -20,7 +20,8 @@ class Game extends Scene {
   Player player;
   boolean accept_inputs;  
   boolean paused;
-  
+  float timePauseStart = 0;
+
   // starting view coordinates
   int camera_x = 0;
   int camera_y = 0;
@@ -260,10 +261,13 @@ void stairPositions() {
       {
         main_applet.transition(Constants.MENU_SCENE);
       }
-
       if (controller.StartPressed())
       {
-        setPaused(!paused);
+        if (millis() - timePauseStart > 500)
+        {
+           setPaused(!paused);
+           timePauseStart = millis();
+        }
       }
 
     } catch (Exception e) {
@@ -272,7 +276,9 @@ void stairPositions() {
     }
 
     map.draw(camera_x, camera_y);
+    //drawObjects(camera_x, camera_y);  
     player.draw(camera_x, camera_y);
+
 
     if (paused)
     {
@@ -459,11 +465,6 @@ void stairPositions() {
       if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
         camera_y = camera_y + delta_y;
       }
-
-    }
-    else
-    {
-      println("Going to non walkable...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + ")");
     }
   }
 
