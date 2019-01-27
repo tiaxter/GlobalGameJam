@@ -31,7 +31,7 @@ class Ladder extends Exit
 
   String toString()
   {
-    return ("Ladder @ {" + x_start + ", " + y_start + ", " + x_end + ", " + y_end + ","  + x_end + ", " + y_end  + "}" );
+    return ("Ladder @ {" + x_start + ", " + y_start + ", " + x_end + ", " + y_end + ","  + x_exit + ", " + y_exit  + "}" );
   }
 
 }

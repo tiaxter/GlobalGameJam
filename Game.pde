@@ -153,11 +153,10 @@ void searchExitPositions() {
 
           if (d.height > max_y)
             max_y = d.height;    
-
-          Exit e = new Exit(min_x, min_y, max_x, max_y);
-          exitPositions.add(e);
-          println("Adding " +  e.toString());
       }
+      Exit e = new Exit(min_x, min_y, max_x, max_y);
+      exitPositions.add(e);
+      println("Adding " +  e.toString());
     }
   }
 
@@ -176,11 +175,15 @@ void stairPositions() {
           if (map.getTileIndex(layerIndex, i, j) > 0) {
             if (s.equals("EndStairs"))
             {
+              println("End of stairs: " + i + " " + j);
               x_exit = i;
               y_exit = j;
             }
             else
+            {
+              println("Added cell: " + i + " " + j);
               cells.add(new Dimension(i,j));
+            }
           }
         }
       }
@@ -201,9 +204,8 @@ void stairPositions() {
 
       if (d.height > max_y)
         max_y = d.height;    
-
-      exitPositions.add(new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit));
   }
+  exitPositions.add(new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit));
 
 }
 
