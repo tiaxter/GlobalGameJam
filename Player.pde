@@ -149,9 +149,9 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
     if(!paused)
     {
       fill(0,255);
-      text(String.valueOf(timer), 54, 54);
+      text(String.valueOf(timer), 25, 25);
       fill(255,255);
-      text(String.valueOf(timer), 50, 50);
+      text(String.valueOf(timer), 25, 25);
     
       delta_time += millis() - time;    
       updateStepSound();

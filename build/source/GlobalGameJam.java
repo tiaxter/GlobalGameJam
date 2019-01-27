@@ -455,11 +455,11 @@ class Game extends Scene {
   static final int DIR_IDLE = 4;
 
   // Spawn points
-  static final int START_X_TOPFLOOR = 192 * 3;
-  static final int START_Y_TOPFLOOR = 192 * 3;
+  static final int START_X_TOPFLOOR = Constants.PLAYER_WIDTH * 3;
+  static final int START_Y_TOPFLOOR = Constants.PLAYER_HEIGHT * 3;
 
-  static final int START_X_GROUNDFLOOR = 192 * 3;
-  static final int START_Y_GROUNDFLOOR = 192 * 3;
+  static final int START_X_GROUNDFLOOR = Constants.PLAYER_WIDTH * 3;
+  static final int START_Y_GROUNDFLOOR = Constants.PLAYER_HEIGHT * 3;
 
 
   // Controller and status

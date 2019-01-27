@@ -36,11 +36,11 @@ class Game extends Scene {
   static final int DIR_IDLE = 4;
 
   // Spawn points
-  static final int START_X_TOPFLOOR = 192 * 3;
-  static final int START_Y_TOPFLOOR = 192 * 3;
+  static final int START_X_TOPFLOOR = Constants.PLAYER_WIDTH * 3;
+  static final int START_Y_TOPFLOOR = Constants.PLAYER_HEIGHT * 3;
 
-  static final int START_X_GROUNDFLOOR = 192 * 3;
-  static final int START_Y_GROUNDFLOOR = 192 * 3;
+  static final int START_X_GROUNDFLOOR = Constants.PLAYER_WIDTH  * 3;
+  static final int START_Y_GROUNDFLOOR = Constants.PLAYER_HEIGHT * 3;
 
 
   boolean controller1[] = {
@@ -310,40 +310,40 @@ void stairPositions() {
       fill(255,255);
       if (!showNote)
       {
-        text("PAUSE", 100, 100);
+        text("PAUSE", 50, 100);
       }
       else
       {
-        text(currentNote, 100, 150);     
-        text("PREMI P o START PER CONTINUARE", 100, main_applet.height - 100);
+        text(currentNote, 50, 75);     
+        text("PREMI P o START PER CONTINUARE", 50, main_applet.height - 100);
       }
     }
 
     if (controller1[DIR_LEFT])
-      moveCamera((int)(-10.0 * ratio), 0, 0);
+      moveCamera((int)(-5.0 * ratio), 0, 0);
 
     if (controller2[DIR_LEFT])
-      moveCamera((int)(-10.0 * ratio), 0, 1);
+      moveCamera((int)(-5.0 * ratio), 0, 1);
 
 
     if (controller1[DIR_RIGHT])
-      moveCamera((int)(10.0 * ratio), 0, 0);
+      moveCamera((int)(5.0 * ratio), 0, 0);
 
     if(controller2[DIR_RIGHT])
-      moveCamera((int)(10.0 * ratio), 0, 1);
+      moveCamera((int)(5.0 * ratio), 0, 1);
 
 
     if (controller1[DIR_UP])
-     moveCamera(0, (int)(-10.0 * ratio), 0);
+     moveCamera(0, (int)(-5.0 * ratio), 0);
 
      if( controller2[DIR_UP])
-      moveCamera(0, (int)(-10.0 * ratio), 1);
+      moveCamera(0, (int)(-5.0 * ratio), 1);
 
     if (controller1[DIR_DOWN])
-      moveCamera(0, (int)(10.0 * ratio), 0);
+      moveCamera(0, (int)(5.0 * ratio), 0);
 
     if(controller2[DIR_DOWN])
-      moveCamera(0, (int)(10.0 * ratio), 1);
+      moveCamera(0, (int)(5.0 * ratio), 1);
 
   }
 

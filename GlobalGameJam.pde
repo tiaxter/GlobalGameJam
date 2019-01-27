@@ -28,10 +28,10 @@ void setup()
 {
     background(0);
 
-    myfont = createFont("Pixelmania.ttf", 36);
+    myfont = createFont("Pixelmania.ttf", 30);
     textFont(myfont);
 
-    size(1920, 1080);
+    size(960, 540);
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
