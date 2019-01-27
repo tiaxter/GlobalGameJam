@@ -1,24 +1,36 @@
 import ptmx.*;
+import java.awt.Dimension;
 
 class Game extends Scene {
   ArrayList<Collectible> oggettiCollezionabili = new ArrayList<Collectible>();
   static final int PuP = 3;
 
+  ArrayList<Exit> exitPositions = new ArrayList<Exit>();
+
   Controller controller;
   ControlIO control;
   Player player;
+  
   int walkableLayerIndex;
 
   int camera_x = 0;
   int camera_y = 0;
 
   String mapName;
-  
+  int mapId;
+
   static final int DIR_UP = 1;
   static final int DIR_DOWN = 0;
   static final int DIR_LEFT = 2;
   static final int DIR_RIGHT = 3;
   static final int DIR_IDLE = 4;
+
+
+  static final int START_X_TOPFLOOR = 192 * 3;
+  static final int START_Y_TOPFLOOR = 192 * 3;
+
+  static final int START_X_GROUNDFLOOR = 192 * 3;
+  static final int START_Y_GROUNDFLOOR = 192 * 3;
 
 
   boolean controller1[] = {
@@ -35,30 +47,64 @@ class Game extends Scene {
   };
 
   Ptmx map;
+  GlobalGameJam main_applet;
 
-  Game(float ratio, String map) {
+  Game(float ratio, String map, int idMap) {
     super(ratio);
     this.mapName = map;
+    this.mapId = idMap;
   }
 
   boolean init(PApplet instance) {
     player = new Player("test", 1);
+
+    main_applet = (GlobalGameJam)instance;
+
+    if(mapId == Constants.GAME_TOPFLOOR)
+    {
+      player.setPosition(START_X_TOPFLOOR, START_Y_TOPFLOOR);
+    }
+    else 
+    {
+        if(mapId == Constants.GAME_GROUNDFLOOR){
+        player.setPosition(START_X_GROUNDFLOOR ,START_Y_GROUNDFLOOR);
+        }
+
+    }
+
     control = ControlIO.getInstance(instance);
     controller = new Controller(control);
     map = new Ptmx(instance, mapName);
-    walkableLayerIndex = walkableLayer();
+    walkableLayerIndex = searchLayer("Walkable");
     pupPosition();
+    searchExitPositions();
+    stairPositions();
+
+    for(Exit c: exitPositions){
+      println(c.toString());
+    }
     return (player != null && map != null);
   }
 
-  int walkableLayer() {
+  int searchLayer(String str) {
     int layerindex = 0;
     int maplayer[];
     do {
       layerindex++;
       maplayer = map.getData(layerindex);
-    } while (maplayer != null && !maplayer.equals("Walkable"));
-    return layerindex - 1;
+      if (maplayer != null && map.getName(layerindex).equals(str))
+        break;
+    } while (maplayer != null);
+    
+    if (maplayer != null)
+    {
+      println("Found layer " + str);
+      return layerindex;
+    }
+
+    println("Not found layer " + str);
+
+    return -2;
   }
 
   /*int[]*/ void pupPosition(){
@@ -70,10 +116,98 @@ class Game extends Scene {
         }
       }
     }
+    
     for(Collectible c: oggettiCollezionabili){
       println(c.toString());
     }
   }
+
+
+void searchExitPositions() {
+  final int MAX_EXITS = 2;
+  for (int layer = 1; layer <= MAX_EXITS; layer++) {
+    String layerName = "Exit" + layer;
+    int layerIndex = searchLayer(layerName);
+    if (layerIndex != -2) {
+      ArrayList<Dimension> cells = new ArrayList<Dimension>(); 
+      println("Found " + layerName);
+      for (int i = 0; i < map.getMapSize().x; i++) {
+        for (int j = 0; j < map.getMapSize().y; j++) {
+          if (map.getTileIndex(layerIndex, i, j) > 0) {
+            cells.add(new Dimension(i,j));
+          }
+        }
+      }
+
+      int min_x = 1000, max_x = -1, min_y = 1000, max_y = -1;
+      for(Dimension d: cells)
+      {
+          if(d.width < min_x)
+            min_x = d.width;
+          
+          if(d.height < min_y)
+            min_y = d.height;
+
+          if (d.width > max_x)
+            max_x = d.width;
+
+          if (d.height > max_y)
+            max_y = d.height;    
+
+          Exit e = new Exit(min_x, min_y, max_x, max_y);
+          exitPositions.add(e);
+          println("Adding " +  e.toString());
+      }
+    }
+  }
+
+}
+
+void stairPositions() {
+  int x_exit = -1, y_exit = -1;
+  String stairStrings[] = { "Stairs", "EndStairs"};
+  ArrayList<Dimension> cells = new ArrayList<Dimension>(); 
+  for (String s : stairStrings) 
+  {
+    int layerIndex = searchLayer(s);
+    if (layerIndex != -2) {
+      for (int i = 0; i < map.getMapSize().x; i++) {
+        for (int j = 0; j < map.getMapSize().y; j++) {
+          if (map.getTileIndex(layerIndex, i, j) > 0) {
+            if (s.equals("EndStairs"))
+            {
+              x_exit = i;
+              y_exit = j;
+            }
+            else
+              cells.add(new Dimension(i,j));
+          }
+        }
+      }
+    }
+  }
+
+  int min_x = 1000, max_x = -1, min_y = 1000, max_y = -1;
+  for(Dimension d: cells)
+  {
+      if(d.width < min_x)
+        min_x = d.width;
+      
+      if(d.height < min_y)
+        min_y = d.height;
+
+      if (d.width > max_x)
+        max_x = d.width;
+
+      if (d.height > max_y)
+        max_y = d.height;    
+
+      exitPositions.add(new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit));
+  }
+
+}
+
+
 
   boolean isWalkable(int x, int y) {
     if (map.getTileIndex(walkableLayerIndex, x, y) >= 0) {
@@ -200,6 +334,26 @@ class Game extends Scene {
       return;
 
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
+
+    for(Exit e: exitPositions)
+    {
+      if(e.isPlayerOverArea((int)(xy[0]/ map.getTileSize().x), (int)(xy[1]/ map.getTileSize().y)))
+      {
+        if (movement_player == 0 && e instanceof Ladder && e.isGameOver((int)(xy[0]/ map.getTileSize().x), (int)(xy[1]/ map.getTileSize().y)))
+        {
+          println("GAME OVER: Player 1 wins");
+          main_applet.transition(Constants.GAME_OVER);
+        }
+        
+        if(movement_player == 1 && !(e instanceof Ladder))
+        {
+          main_applet.transition(Constants.GAME_OVER);
+          println("GAME OVER: Player 2 wins");
+        }
+      }
+
+    }
+
     if (isWalkable((int)(xy[0] / map.getTileSize().x), (int)(xy[1] / map.getTileSize().y))) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 

@@ -1,6 +1,6 @@
 float ratio = 0.0;
 
-Scene scenes[] = { null, null, null};
+Scene scenes[] = { null, null, null, null};
 
 final int FADEOUT_TIME_MS = 1000;
 
@@ -24,10 +24,14 @@ void setup()
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
-    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Placeholder/What.tmx");
-    scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx");
+    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Placeholder/What.tmx", Constants.GAME_TOPFLOOR);
+    scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx", Constants.GAME_GROUNDFLOOR);
+    scenes[Constants.GAME_OVER] = new GameOver(ratio);
 
-    if (!(scenes[Constants.MENU_SCENE].init(this) && scenes[Constants.GAME_GROUNDFLOOR].init(this) && scenes[Constants.GAME_TOPFLOOR].init(this)))
+    if (!(scenes[Constants.MENU_SCENE].init(this) && 
+          scenes[Constants.GAME_GROUNDFLOOR].init(this) && 
+          scenes[Constants.GAME_TOPFLOOR].init(this) &&
+          scenes[Constants.GAME_OVER].init(this)))
     {
       print("Error initializing scenes!");
       System.exit(-1);
