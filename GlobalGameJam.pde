@@ -15,6 +15,13 @@ float screen_x = 0.0;
 
 int lastWinner = 0;
 
+
+// Controller and status
+Controller controller;
+ControlIO control;
+
+
+
 PFont myfont;
 
 void setup()
@@ -40,6 +47,10 @@ void setup()
       print("Error initializing scenes!");
       System.exit(-1);
     }
+
+    control = ControlIO.getInstance(this);
+    controller = new Controller(control);
+
     currentScene = Constants.MENU_SCENE;
 
     music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");

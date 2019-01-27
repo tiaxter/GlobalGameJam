@@ -43,10 +43,6 @@ class Game extends Scene {
   static final int START_Y_GROUNDFLOOR = 192 * 3;
 
 
-  // Controller and status
-  Controller controller;
-  ControlIO control;
-
   boolean controller1[] = {
     false,
     false,
@@ -86,8 +82,6 @@ class Game extends Scene {
 
     }
 
-    control = ControlIO.getInstance(instance);
-    controller = new Controller(control);
     map = new Ptmx(instance, mapName);
     walkableLayerIndex = searchLayer("Walkable");
     pupPosition();
@@ -273,16 +267,16 @@ void stairPositions() {
   void draw() {
 
     try {
-      setDirection(String.valueOf(controller.LeftAnalogX()), true, false);
-      setDirection(String.valueOf(controller.LeftAnalogY()), false, false);
-      setDirection(String.valueOf(controller.RightAnalogX()), true, true);
-      setDirection(String.valueOf(controller.RightAnalogY()), false, true);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogX()), true, false);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogY()), false, false);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogX()), true, true);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogY()), false, true);
 
-      if (controller.BackPressed())
+      if (main_applet.controller.BackPressed())
       {
         main_applet.transition(Constants.MENU_SCENE);
       }
-      if (controller.StartPressed())
+      if (main_applet.controller.StartPressed())
       {
         if (millis() - timePauseStart > 500)
         {
