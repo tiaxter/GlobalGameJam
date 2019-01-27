@@ -20,7 +20,7 @@ void setup()
 {
     background(0);
 
-    myfont = createFont("Pixelmania.ttf", 32);
+    myfont = createFont("Pixelmania.ttf", 36);
     textFont(myfont);
 
     size(1920,1080);
@@ -81,11 +81,11 @@ void draw()
       if (screen_x > 0)
       {        
         currentScene = target_scene;
-        
-        if(target_scene == GAME_GROUNDFLOOR)
+
+        if(target_scene == Constants.GAME_GROUNDFLOOR)
           music.loop();
         else
-          music.stop()
+          music.stop();
         
         scenes[currentScene].reset();
       }

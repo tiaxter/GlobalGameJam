@@ -1,6 +1,6 @@
 import java.lang.Math;
 
-final int PLAYER_TIME_SLOT = 3000;
+int PLAYER_TIME_SLOT[] = { 3000, 3000 };
 
 class Player{
 
@@ -22,11 +22,11 @@ class Player{
   SoundFile currentStepSound;
 
   // Used to switch between the players
-  boolean currentPlayer = true;
+  int currentPlayer = Constants.JONNY;
 
   Player(PApplet instance){
-    animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
-    animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
+    animation_kenny = new Animation("Sprites\\Kenny\\P2_move", 5);
+    animation_jonny = new Animation("Sprites\\Jonny\\P1_move", 5);
 
     loadSounds(instance);
 
@@ -60,7 +60,7 @@ class Player{
       if ((currentStepSound != null && !currentStepSound.isPlaying()) || currentStepSound == null)
       {
         int rand_step = (int)(Math.random() * 10) % 4;
-        if (currentPlayer)
+        if (currentPlayer == Constants.JONNY)
           currentStepSound = steps_jonny[rand_step];
         else 
           currentStepSound = steps_kenny[rand_step];
@@ -88,8 +88,13 @@ class Player{
 
   boolean isActive(int currPlayer)
   {
-    return (currPlayer == 1 && currentPlayer) || (currPlayer == 0 && !currentPlayer);
+    return (currPlayer == currentPlayer);
 
+  }
+
+  void powerUp(int currentPLayer)
+  {
+    PLAYER_TIME_SLOT[currentPlayer] += 1000;
   }
 
   void setDirection(int dir) {
@@ -99,7 +104,7 @@ class Player{
 
       direction = dir;
 
-     if (currentPlayer)
+     if (currentPlayer ==  Constants.JONNY)
       {
         animation_jonny.updateDirection(dir);
       }
@@ -134,7 +139,7 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
 
   void draw(int camera_x, int camera_y)
   {
-    double timer = Math.round(((PLAYER_TIME_SLOT - delta_time) / 1000.0) * 10d) / 10d;
+    double timer = Math.round(((PLAYER_TIME_SLOT[currentPlayer] - delta_time) / 1000.0) * 10d) / 10d;
 
     if(!paused)
     {
@@ -147,15 +152,19 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
       updateStepSound();
     }
 
-    if (delta_time > PLAYER_TIME_SLOT)
+    if (delta_time > PLAYER_TIME_SLOT[currentPlayer])
     {
-      currentPlayer = !currentPlayer;   
+      if(currentPlayer == Constants.JONNY)
+        currentPlayer = Constants.KENNY;
+      else
+       currentPlayer = Constants.JONNY;
+
       setDirection(Game.DIR_IDLE);
       delta_time = 0.0f;   
     }
     time = millis();
 
-    if (currentPlayer)
+    if (currentPlayer == Constants.JONNY)
     {
       animation_jonny.display((this.x - camera_x), (this.y - camera_y));
     }

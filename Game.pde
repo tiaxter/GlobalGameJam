@@ -312,7 +312,8 @@ void stairPositions() {
       }
       else
       {
-        text(currentNote, 50, 150);     
+        text(currentNote, 100, 150);     
+        text("PREMI P o START PER CONTINUARE", 0, main_applet.height - 100);
       }
     }
 
@@ -660,7 +661,7 @@ void setDirection(String dir, boolean x, boolean right) {
     }
   }
 
-  void testCollectObject(int player_x, int player_y, boolean currentPlayer)
+  void testCollectObject(int player_x, int player_y, int currentPlayer)
   {
     for(Collectible c : oggettiCollezionabili)
     {
@@ -668,17 +669,18 @@ void setDirection(String dir, boolean x, boolean right) {
         {
             if (!c.picked)
             {
-              handlePickedObject(c.collectible_type, currentPlayer, c.getText(currentPlayer? 1 : 0));
+              handlePickedObject(c.collectible_type, currentPlayer, c.getText(currentPlayer));
+              player.powerUp(currentPlayer);
             }
-            
+
             c.setPicked(true);
         }
     }
   }
 
-  void handlePickedObject(int collectible_id, boolean currentPlayer, String text)
+  void handlePickedObject(int collectible_id, int currentPlayer, String text)
   {
-      if(currentPlayer)
+      if(currentPlayer == Constants.JONNY)
         println("Raccolto elemento " + collectible_id + " da Jonny");
       else
         println("Raccolto elemento " + collectible_id + " da Kenny");
