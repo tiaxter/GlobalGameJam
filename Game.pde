@@ -16,9 +16,9 @@ class Game extends Scene {
 
   int walkableLayerIndex;
 
-  // Player state 
+  // Player state
   Player player;
-  boolean accept_inputs;  
+  boolean accept_inputs;
   boolean paused;
   float timePauseStart = 0;
 
@@ -75,7 +75,7 @@ class Game extends Scene {
     {
       player.setPosition(START_X_TOPFLOOR, START_Y_TOPFLOOR);
     }
-    else 
+    else
     {
         if(mapId == Constants.GAME_GROUNDFLOOR){
         player.setPosition(START_X_GROUNDFLOOR ,START_Y_GROUNDFLOOR);
@@ -105,14 +105,14 @@ class Game extends Scene {
     {
       player.setPosition(START_X_TOPFLOOR, START_Y_TOPFLOOR);
     }
-    else 
+    else
     {
         if(mapId == Constants.GAME_GROUNDFLOOR){
         player.setPosition(START_X_GROUNDFLOOR ,START_Y_GROUNDFLOOR);
         }
 
     }
-    
+
     paused = false;
     accept_inputs = true;
   }
@@ -126,7 +126,7 @@ class Game extends Scene {
       if (maplayer != null && map.getName(layerindex).equals(str))
         break;
     } while (maplayer != null);
-    
+
     if (maplayer != null)
     {
       return layerindex;
@@ -143,7 +143,7 @@ class Game extends Scene {
         }
       }
     }
-    
+
     for(Collectible c: oggettiCollezionabili){
       println(c.toString());
     }
@@ -156,7 +156,7 @@ void searchExitPositions() {
     String layerName = "Exit" + layer;
     int layerIndex = searchLayer(layerName);
     if (layerIndex != -2) {
-      ArrayList<Dimension> cells = new ArrayList<Dimension>(); 
+      ArrayList<Dimension> cells = new ArrayList<Dimension>();
       for (int i = 0; i < map.getMapSize().x; i++) {
         for (int j = 0; j < map.getMapSize().y; j++) {
           if (map.getTileIndex(layerIndex, i, j) > 0) {
@@ -170,7 +170,7 @@ void searchExitPositions() {
       {
           if(d.width < min_x)
             min_x = d.width;
-          
+
           if(d.height < min_y)
             min_y = d.height;
 
@@ -178,7 +178,7 @@ void searchExitPositions() {
             max_x = d.width;
 
           if (d.height > max_y)
-            max_y = d.height;    
+            max_y = d.height;
       }
       Exit e = new Exit(min_x, min_y, max_x, max_y);
       exitPositions.add(e);
@@ -190,8 +190,8 @@ void searchExitPositions() {
 void stairPositions() {
   int x_exit = -1, y_exit = -1;
   String stairStrings[] = { "Stairs", "EndStairs"};
-  ArrayList<Dimension> cells = new ArrayList<Dimension>(); 
-  for (String s : stairStrings) 
+  ArrayList<Dimension> cells = new ArrayList<Dimension>();
+  for (String s : stairStrings)
   {
     int layerIndex = searchLayer(s);
     if (layerIndex != -2) {
@@ -218,7 +218,7 @@ void stairPositions() {
   {
       if(d.width < min_x)
         min_x = d.width;
-      
+
       if(d.height < min_y)
         min_y = d.height;
 
@@ -226,7 +226,7 @@ void stairPositions() {
         max_x = d.width;
 
       if (d.height > max_y)
-        max_y = d.height;    
+        max_y = d.height;
   }
 
   Ladder l = new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit);
@@ -276,7 +276,6 @@ void stairPositions() {
     }
 
     map.draw(camera_x, camera_y);
-    drawObjects(camera_x, camera_y);  
     player.draw(camera_x, camera_y);
 
 
@@ -287,7 +286,7 @@ void stairPositions() {
       fill(255,255);
       text("PAUSE", 100, 100);
     }
-    
+
     if (controller1[DIR_LEFT])
       moveCamera((int)(-10.0 * ratio), 0, 0);
 
@@ -316,7 +315,6 @@ void stairPositions() {
 
   }
 
-  void setDirection(String dir, boolean x) {
     float xoy;
     try {
       xoy = Float.valueOf(dir);
@@ -377,7 +375,7 @@ void stairPositions() {
 
   void setPaused(boolean paused)
   {
-    this.paused = paused; 
+    this.paused = paused;
     player.setPaused(paused);
   }
 
@@ -387,7 +385,7 @@ void stairPositions() {
       return;
 
     if (paused)
-    { 
+    {
       return;
     }
 
@@ -398,7 +396,7 @@ void stairPositions() {
 
     int next_player_tile_x = (int)((xy[0] + Constants.PLAYER_WIDTH  / 2) / map.getTileSize().x);
     int next_player_tile_y = (int)((xy[1] + Constants.PLAYER_HEIGHT / 2) / map.getTileSize().y);
-    
+
 
     // Check for exits and ladders
     for(Exit e: exitPositions)
@@ -418,7 +416,7 @@ void stairPositions() {
             if (player.direction != Game.DIR_LEFT || player.direction != Game.DIR_RIGHT);
             {
               return;
-            } 
+            }
           }
         }
 
@@ -442,7 +440,7 @@ void stairPositions() {
           main_applet.transition(Constants.GAME_OVER);
           accept_inputs = false;
         }
-        
+
         if(movement_player == 1 && !(e instanceof Ladder))
         {
           main_applet.transition(Constants.GAME_OVER);
