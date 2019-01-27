@@ -1,7 +1,6 @@
 class Ladder extends Exit
 {
 
-  int x_start, y_start, x_end, y_end;
   int x_exit, y_exit;
 
   Ladder(int x_start, int y_start,int  x_end, int y_end)

@@ -80,9 +80,6 @@ class Game extends Scene {
     searchExitPositions();
     stairPositions();
 
-    for(Exit c: exitPositions){
-      println(c.toString());
-    }
     return (player != null && map != null);
   }
 
@@ -98,11 +95,8 @@ class Game extends Scene {
     
     if (maplayer != null)
     {
-      println("Found layer " + str);
       return layerindex;
     }
-
-    println("Not found layer " + str);
 
     return -2;
   }
@@ -112,7 +106,6 @@ class Game extends Scene {
       for(int j = 0; j < map.getMapSize().y; j++){
         if(map.getTileIndex(walkableLayerIndex, i, j) == 3){
           oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP, false));
-          //println("Un regalo per te in pos x = " + i + "y = "+ j);
         }
       }
     }
@@ -130,7 +123,6 @@ void searchExitPositions() {
     int layerIndex = searchLayer(layerName);
     if (layerIndex != -2) {
       ArrayList<Dimension> cells = new ArrayList<Dimension>(); 
-      println("Found " + layerName);
       for (int i = 0; i < map.getMapSize().x; i++) {
         for (int j = 0; j < map.getMapSize().y; j++) {
           if (map.getTileIndex(layerIndex, i, j) > 0) {
@@ -156,7 +148,6 @@ void searchExitPositions() {
       }
       Exit e = new Exit(min_x, min_y, max_x, max_y);
       exitPositions.add(e);
-      println("Adding " +  e.toString());
     }
   }
 
@@ -175,13 +166,11 @@ void stairPositions() {
           if (map.getTileIndex(layerIndex, i, j) > 0) {
             if (s.equals("EndStairs"))
             {
-              println("End of stairs: " + i + " " + j);
               x_exit = i;
               y_exit = j;
             }
             else
             {
-              println("Added cell: " + i + " " + j);
               cells.add(new Dimension(i,j));
             }
           }
@@ -205,7 +194,9 @@ void stairPositions() {
       if (d.height > max_y)
         max_y = d.height;    
   }
-  exitPositions.add(new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit));
+
+  Ladder l = new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit);
+  exitPositions.add(l);
 
 }
 
