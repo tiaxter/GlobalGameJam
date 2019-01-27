@@ -1,5 +1,6 @@
 import ptmx.*;
 import java.awt.Dimension;
+import java.util.Arrays;
 
 class Game extends Scene {
 
@@ -136,18 +137,34 @@ class Game extends Scene {
   }
 
   /*int[]*/ void pupPosition(){
-  for(int i = 0; i < map.getMapSize().x; i++){
-      for(int j = 0; j < map.getMapSize().y; j++){
-        if(map.getTileIndex(walkableLayerIndex, i, j) > 0 && map.getTileIndex(walkableLayerIndex, i, j) < 10 ){
-          oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP + map.getTileIndex(walkableLayerIndex, i, j), false));
+
+  int indexObjects = searchLayer("Objects");
+  
+  int objectIds[] = {274, 275, 276, 287, 288};
+
+  if (indexObjects != -2)
+  {
+    println("Found object layer " + indexObjects);
+    for(int i = 0; i < map.getMapSize().x; i++)
+    {
+        for(int j = 0; j < map.getMapSize().y; j++)
+        {
+          int tileIdx = map.getTileIndex(indexObjects, i, j) + 1;
+          for (int z = 0; z < 5; ++z)
+          {
+            if (objectIds[z] == tileIdx)
+            {
+              oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, tileIdx , false));
+            }
+          }
         }
       }
-    }
-
-    for(Collectible c: oggettiCollezionabili){
-      println(c.toString());
-    }
   }
+  println("Collectibles:");
+  for(Collectible c: oggettiCollezionabili){
+    println(c.toString());
+  }
+}
 
 
 void searchExitPositions() {
@@ -278,6 +295,7 @@ void stairPositions() {
     }
 
     map.draw(camera_x, camera_y);
+    drawObjects(camera_x, camera_y);
     player.draw(camera_x, camera_y);
 
 
