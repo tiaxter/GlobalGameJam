@@ -11,7 +11,7 @@ class Game extends Scene {
   // Map parsing
   ArrayList<Collectible> oggettiCollezionabili = new ArrayList<Collectible>();
   static final int PuP = 3;
-
+  ArrayList<Door> porte = new ArrayList<Door>();
   ArrayList<Exit> exitPositions = new ArrayList<Exit>();
 
   int walkableLayerIndex;
@@ -648,5 +648,17 @@ void setDirection(String dir, boolean x, boolean right) {
         println("Raccolto elemento " + collectible_id + " da Kenny");
   }
 
+
+  boolean isDoorClosed(int x, int y)
+  {
+    for(Door d : porte)
+    {
+        if (d.isColliding(x, y))
+        {
+            return (!d.opened);
+        }
+    }
+    return false;
+  }
 
 }
