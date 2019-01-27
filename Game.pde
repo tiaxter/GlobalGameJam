@@ -138,8 +138,8 @@ class Game extends Scene {
   /*int[]*/ void pupPosition(){
   for(int i = 0; i < map.getMapSize().x; i++){
       for(int j = 0; j < map.getMapSize().y; j++){
-        if(map.getTileIndex(walkableLayerIndex, i, j) == 3){
-          oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP, false));
+        if(map.getTileIndex(walkableLayerIndex, i, j) > 0 && map.getTileIndex(walkableLayerIndex, i, j) < 10 ){
+          oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP + map.getTileIndex(walkableLayerIndex, i, j), false));
         }
       }
     }
@@ -276,7 +276,7 @@ void stairPositions() {
     }
 
     map.draw(camera_x, camera_y);
-    //drawObjects(camera_x, camera_y);  
+    drawObjects(camera_x, camera_y);  
     player.draw(camera_x, camera_y);
 
 
@@ -417,7 +417,6 @@ void stairPositions() {
             // If next move takes the player away from the stairs, prevent it unless you're moving horizontally
             if (player.direction != Game.DIR_LEFT || player.direction != Game.DIR_RIGHT);
             {
-              println("From ladder to standard blocked...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + ")");
               return;
             } 
           }
@@ -428,7 +427,6 @@ void stairPositions() {
         {
           if (player.direction != Game.DIR_LEFT && player.direction != Game.DIR_RIGHT)
           {
-            println("Going to ladder with wrong direction...(" + curr_player_tile_x + "," +  curr_player_tile_y + ") => (" + next_player_tile_x + "," + next_player_tile_y + "), " +  player.direction);
             return;
           }
         }
@@ -465,6 +463,8 @@ void stairPositions() {
       if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
         camera_y = camera_y + delta_y;
       }
+
+      testCollectObject(next_player_tile_x, next_player_tile_y, player.currentPlayer);
     }
   }
 
@@ -574,4 +574,34 @@ void stairPositions() {
       player.setDirection(DIR_LEFT);
     }
   }
+
+  void drawObjects(int camera_x, int camera_y)
+  {
+    for(Collectible c : oggettiCollezionabili)
+    {
+        c.draw(camera_x, camera_y);
+    }
+  }
+
+  void testCollectObject(int player_x, int player_y, boolean currentPlayer)
+  {
+    for(Collectible c : oggettiCollezionabili)
+    {
+        if (c.isColliding(player_x, player_y))
+        {
+            c.setPicked(true);
+            handlePickedObject(c.collectible_type, currentPlayer);
+        }
+    }
+  }
+
+  void handlePickedObject(int collectible_id, boolean currentPlayer)
+  {
+      if(currentPlayer)
+        println("Raccolto elemento " + collectible_id + " da Jonny");
+      else
+        println("Raccolto elemento " + collectible_id + " da Kenny");
+  }
+
+
 }
