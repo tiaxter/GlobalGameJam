@@ -111,13 +111,13 @@ class Game extends Scene {
     }
 
     player.resetTimers();
-    
+
     // Map parsing
     for (Collectible c : oggettiCollezionabili)
     {
       c.resetStatus();
     }
-    
+
     paused = false;
     accept_inputs = true;
   }
@@ -143,7 +143,7 @@ class Game extends Scene {
   /*int[]*/ void pupPosition(){
 
   int indexObjects = searchLayer("Objects");
-  
+
   int objectIds[] = {274, 275, 276, 287, 288};
 
   if (indexObjects != -2)
@@ -288,7 +288,7 @@ void stairPositions() {
       {
         if (millis() - timePauseStart > 500)
         {
-           
+
            setPaused(!paused);
            timePauseStart = millis();
         }
@@ -314,8 +314,8 @@ void stairPositions() {
       }
       else
       {
-        text(currentNote, 50, 75);     
-        text("PREMI P o START PER CONTINUARE", 50, main_applet.height - 100);
+        text(currentNote, 50, 75);
+        text("PREMI P O START PER CONTINUARE", 50, main_applet.height - 50);
       }
     }
 

@@ -39,7 +39,7 @@ class Collectible{
 
   boolean isColliding(int player_x, int player_y)
   {
-    return player_x == this.mapx && player_y == this.mapy; 
+    return player_x == this.mapx && player_y == this.mapy;
   }
 
   void setPicked(boolean p)
@@ -68,7 +68,7 @@ class Collectible{
             return  "LA CUCINA E' DOVE MAMMA E PAPA' CUCINANO\n"+
                     "E MANGIANO CON ME. DAL FORNO ESCONO\n" +
                     "BISCOTTI CALDI, LA MAMMA MI STRINGE\n" +
-                    "E MI DA' TANTE COCCOLE MENTRE SIAMO\n" + 
+                    "E MI DA' TANTE COCCOLE MENTRE SIAMO\n" +
                     "SEDUTI A TAVOLA. MI FA SENTIRE AMATO.";
           else
             return  "QUESTO POSTO E' BRUTTO... IL FORNO BRUCIA,\n"+
@@ -93,32 +93,39 @@ class Collectible{
         case 287:
           if (player == Constants.JONNY)
             return  "QUESTO POSTO E'...OK.\n" +
-                    "GUARDO LA TV CON PAPA', SEDUTO STRETTO A LUI\n" +
-                    "SUL DIVANO OGNI DOMENICA, CI DIVERTIAMO\n" +
-                    "TANTISSIMO PARLARE CON LUI, SOLO LE GRANDI\n" +
-                    "VETRATE NON MI PIACCIONO... MI POSSONO GUARDARE\n" +
-                    "DA FUORI.MI FA SENTIRE ESPOSTO... MA C'E' PAPA'";
+                    "GUARDO LA TV CON PAPA',SEDUTO STRETTO\n" +
+                    "A LUI SUL DIVANO OGNI DOMENICA,\n" +
+                    "CI DIVERTIAMO TANTISSIMO PARLARE\n" +
+                    "CON LUI, SOLO LE GRANDI VETRATE\n" +
+                    "NON MI PIACCIONO...\n" +
+                    "MI POSSONO GUARDARE\n" +
+                    "DA FUORI.MI FA SENTIRE ESPOSTO...\n" +
+                    "MA C'E' PAPA'";
         else
             return  "E'... OK.\n" +
-                    "LA TV MI ANNOIA, PAPA' E' SUDATO E IL DIVANO E'\n"+
-                    "STRETTO, NON MI FA RESPIRARE... E' SEMPRE COSI'\n" +
-                    "APPICCICOSO. PERO' CI SONO LE VETRATE...MI PIACE\n" +
-                    "PASSARE LE ORE A FISSARLE, OSSERVANDO IL CIELO,\n" +
+                    "LA TV MI ANNOIA, PAPA' E' SUDATO\n" +
+                    "E IL DIVANO E' STRETTO, NON MI FA RESPIRARE...\n" +
+                    "E' SEMPRE COSI' APPICCICOSO. PERO'\n" +
+                    "CI SONO LE VETRATE...MI PIACE PASSARE\n" +
+                    "LE ORE A FISSARLE, OSSERVANDO IL CIELO,\n" +
                     "LE PIANTE, GLI ANIMALI, LE ATRE PERSONE...\n" +
                     "RIESCO A RESPIRARE.";
-        
+
         case 288:
           if (player == Constants.JONNY)
-            return  "MI DIVERTO SEMPRE TANTISSIMO QUI A GIOCARE CON\n" +
-                    "PAPA'... NON SONO BRAVO QUANTO LUI, MA UN GIORNO\n" +
-                    "SARO' PIU' BRAVO DI LUI A BILIARDO...PERCHE'\n" +
-                    "USCIRE QUANDO TI DIVERTI COSI' TANTO DENTRO, SENZA\n" +
+            return  "MI DIVERTO SEMPRE TANTISSIMO QUI A GIOCARE\n" +
+                    "CON PAPA'... NON SONO BRAVO QUANTO LUI,\n" +
+                    "MA UN GIORNO SARO' PIU' BRAVO DI LUI A\n" +
+                    "BILIARDO...PERCHE' USCIRE QUANDO TI\n" +
+                    "DIVERTI COSI' TANTO DENTRO, SENZA\n" +
                     "PREOCCUPARTI DELLA PIOGGIA?";
           else
-            return  "UN'ALTRA STANZA INUTILE...HAI TANTO SPAZIO PER\n" +
-                    "GIOCARE FUORI, NON SERVE UN TETTO PER DIVERTIRSI,\n" +
-                    "SOPRATTUTTO SE PIOVE... MI PIACE SENTIRE LA PIOGGIA\n" +
-                    "ADDOSSO. SE QUESTO BILIARDO FOSSE ALL’APERTO MI\n" +
+            return  "UN'ALTRA STANZA INUTILE...HAI TANTO SPAZIO\n" +
+                    "PER GIOCARE FUORI, NON SERVE UN TETTO\n" +
+                    "PER DIVERTIRSI, SOPRATTUTTO SE PIOVE...\n" +
+                    "MI PIACE SENTIRE LA PIOGGIA\n" +
+                    "ADDOSSO. SE QUESTO BILIARDO FOSSE\n" +
+                    "ALL’APERTO MI\n" +
                     "PIACEREBBE DI PIÙ GIOCARCI.";
         default:
                     return "NON SO CHE DIRE.";

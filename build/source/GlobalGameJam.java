@@ -9,6 +9,7 @@ import org.gamecontrolplus.*;
 import net.java.games.input.*; 
 import ptmx.*; 
 import java.awt.Dimension; 
+import java.util.Arrays; 
 import processing.video.*; 
 import java.lang.Math; 
 
@@ -23,7 +24,7 @@ import java.io.IOException;
 
 public class GlobalGameJam extends PApplet {
 
-
+    
 
 float ratio = 0.0f;
 
@@ -38,6 +39,14 @@ int target_scene;
 boolean fade = false;
 float screen_x = 0.0f;
 
+int lastWinner = 0;
+
+
+// Controller and status
+Controller controller;
+ControlIO control;
+
+
 
 PFont myfont;
 
@@ -45,14 +54,14 @@ public void setup()
 {
     background(0);
 
-    myfont = createFont("Pixelmania.ttf", 50);
+    myfont = createFont("Pixelmania.ttf", 30);
     textFont(myfont);
 
     
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
-    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Placeholder/What.tmx", Constants.GAME_TOPFLOOR);
+    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Piano1/Piano1.tmx", Constants.GAME_TOPFLOOR);
     scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx", Constants.GAME_GROUNDFLOOR);
     scenes[Constants.GAME_OVER] = new GameOver(ratio);
 
@@ -64,11 +73,14 @@ public void setup()
       print("Error initializing scenes!");
       System.exit(-1);
     }
+
+    control = ControlIO.getInstance(this);
+    controller = new Controller(control);
+
     currentScene = Constants.MENU_SCENE;
 
     music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");
-    music.amp(0.5f);
-    music.loop();
+    music.amp(0.2f); 
 
 }
 
@@ -83,6 +95,15 @@ public void transition(int nextScene)
   }
 }
 
+public void setLastWinner(int winner)
+{
+  lastWinner = winner;
+}
+
+public int getLastWinner()
+{
+  return lastWinner;
+}
 
 public void draw()
 {
@@ -105,8 +126,14 @@ public void draw()
       rect(screen_x, 0, width, height);
 
       if (screen_x > 0)
-      {
+      {        
         currentScene = target_scene;
+
+        if(target_scene == Constants.GAME_GROUNDFLOOR)
+          music.loop();
+        else
+          music.stop();
+        
         scenes[currentScene].reset();
       }
 
@@ -198,7 +225,7 @@ class Collectible{
     this.mapy = mapy;
     this.collectible_type = collectible_type;
     this.picked = picked;
-    this.image = loadImage("icon.png");
+    this.image = loadImage("letter.png");
   }
 
   public @Override
@@ -206,6 +233,11 @@ class Collectible{
     return "Absolute X : " + absx + "\nAbsolute Y: " + absy +
     "\nMap X : " + mapx + "\nMap Y : " + mapy +
     "\nTipo di oggetto : " + collectible_type;
+  }
+
+  public void resetStatus()
+  {
+    picked = false;
   }
 
   public void draw(int camera_x, int camera_y)
@@ -218,7 +250,7 @@ class Collectible{
 
   public boolean isColliding(int player_x, int player_y)
   {
-    return player_x == this.mapx && player_y == this.mapy; 
+    return player_x == this.mapx && player_y == this.mapy;
   }
 
   public void setPicked(boolean p)
@@ -226,16 +258,101 @@ class Collectible{
     this.picked = p;
   }
 
+  public String getText(int player)
+  {
+    switch(collectible_type)
+    {
+        case 274:
+          if (player == Constants.JONNY)
+            return "QUESTA STANZA E' RUMOROSA, CALDA, UMIDA\n"+
+                   "E SECCA ALLO STESSO TEMPO... MA E' COSI'\n"+
+                   "PICCOLA, MI FA SENTIRE BENISSIMO...\n"+
+                   "MI RILASSA";
+          else
+            return "PERCHE' QUESTA STANZA E' COSÌ PICCOLA!?\n" +
+                   "MI FA IMPAZZIRE, NON RIESCO A GIRARMI,\n" +
+                   "NON RIESCO NEANCHE A PENSARE...\n" +
+                   "VOGLIO ANDARMENE DA QUI!";
+
+        case 275:
+          if (player == Constants.JONNY)
+            return  "LA CUCINA E' DOVE MAMMA E PAPA' CUCINANO\n"+
+                    "E MANGIANO CON ME. DAL FORNO ESCONO\n" +
+                    "BISCOTTI CALDI, LA MAMMA MI STRINGE\n" +
+                    "E MI DA' TANTE COCCOLE MENTRE SIAMO\n" +
+                    "SEDUTI A TAVOLA. MI FA SENTIRE AMATO.";
+          else
+            return  "QUESTO POSTO E' BRUTTO... IL FORNO BRUCIA,\n"+
+                    "IL FRIGO E' FREDDO, MAMMA MI TIENE FERMO\n"+
+                    "TRA LE BRACCIA, LA SEDIA E' SCOMODA...\n" +
+                    "L’UNICA COSA BELLA E' LA FINESTRA DA CUI\n"+
+                    "POSSO VEDERE IL CIELO. MI FA SENTIRE IN\n" +
+                    "PERICOLO.";
+
+        case 276:
+          if (player == Constants.JONNY)
+            return  "QUESTA E' LA STANZA CHE MI PIACE DI MENO...\n"+
+                    "PERCHE' QUANDO SI VIENE QUI VUOL DIRE CHE\n" +
+                    "CI SI VESTE PER USCIRE E A ME NON PIACE\n" +
+                    "USCIRE... MI FA PAURA IL FUORI.";
+        else
+            return  "ODIO QUESTA CASA E QUESTI MURI... MA QUESTA\n" +
+                    "LA ODIO MENO, PERCHE' QUANDO ANDIAMO QUI,\n" +
+                    "VUOL DIRE CHE FINALMENTE SI ESCE!\n" +
+                    "FINALMENTE SI RESPIRA...";
+
+        case 287:
+          if (player == Constants.JONNY)
+            return  "QUESTO POSTO E'...OK.\n" +
+                    "GUARDO LA TV CON PAPA',SEDUTO STRETTO\n" +
+                    "A LUI SUL DIVANO OGNI DOMENICA,\n" +
+                    "CI DIVERTIAMO TANTISSIMO PARLARE\n" +
+                    "CON LUI, SOLO LE GRANDI VETRATE\n" +
+                    "NON MI PIACCIONO...\n" +
+                    "MI POSSONO GUARDARE\n" +
+                    "DA FUORI.MI FA SENTIRE ESPOSTO...\n" +
+                    "MA C'E' PAPA'";
+        else
+            return  "E'... OK.\n" +
+                    "LA TV MI ANNOIA, PAPA' E' SUDATO\n" +
+                    "E IL DIVANO E' STRETTO, NON MI FA RESPIRARE...\n" +
+                    "E' SEMPRE COSI' APPICCICOSO. PERO'\n" +
+                    "CI SONO LE VETRATE...MI PIACE PASSARE\n" +
+                    "LE ORE A FISSARLE, OSSERVANDO IL CIELO,\n" +
+                    "LE PIANTE, GLI ANIMALI, LE ATRE PERSONE...\n" +
+                    "RIESCO A RESPIRARE.";
+
+        case 288:
+          if (player == Constants.JONNY)
+            return  "MI DIVERTO SEMPRE TANTISSIMO QUI A GIOCARE\n" +
+                    "CON PAPA'... NON SONO BRAVO QUANTO LUI,\n" +
+                    "MA UN GIORNO SARO' PIU' BRAVO DI LUI A\n" +
+                    "BILIARDO...PERCHE' USCIRE QUANDO TI\n" +
+                    "DIVERTI COSI' TANTO DENTRO, SENZA\n" +
+                    "PREOCCUPARTI DELLA PIOGGIA?";
+          else
+            return  "UN'ALTRA STANZA INUTILE...HAI TANTO SPAZIO\n" +
+                    "PER GIOCARE FUORI, NON SERVE UN TETTO\n" +
+                    "PER DIVERTIRSI, SOPRATTUTTO SE PIOVE...\n" +
+                    "MI PIACE SENTIRE LA PIOGGIA\n" +
+                    "ADDOSSO. SE QUESTO BILIARDO FOSSE\n" +
+                    "ALL’APERTO MI\n" +
+                    "PIACEREBBE DI PIÙ GIOCARCI.";
+        default:
+                    return "NON SO CHE DIRE.";
+    }
+  }
+
 }
 
 class Constants{
   
-static final int SCREEN_W = 2048;
-static final int SCREEN_H = 1080;
+static final int SCREEN_W = 960;
+static final int SCREEN_H = 540;
 
 
-static final int LEVEL_W = 2048*2;
-static final int LEVEL_H = 1080*2;
+static final int LEVEL_W = 960*2;
+static final int LEVEL_H = 540*2;
 
 
 static final int MENU_SCENE = 0;
@@ -244,11 +361,16 @@ static final int GAME_GROUNDFLOOR = 2;
 static final int GAME_OVER = 3;
 
 
-static final int  PLAYER_WIDTH = 192;
-static final int  PLAYER_HEIGHT = 192;
+static final int  PLAYER_WIDTH = 96;
+static final int  PLAYER_HEIGHT = 96;
 
-static final int VIDEO_W = 1280;
-static final int VIDEO_H = 720;
+static final int VIDEO_W = 960;
+static final int VIDEO_H = 540;
+
+static final int JONNY = 1;
+static final int KENNY = 0;
+
+static final int DEFAULT_TIMER = 3000;
 
 };
 
@@ -423,6 +545,7 @@ class Frames{
 
 
 
+
 class Game extends Scene {
 
   // Map container
@@ -442,6 +565,8 @@ class Game extends Scene {
   Player player;
   boolean accept_inputs;
   boolean paused;
+  boolean showNote;
+  String currentNote;
   float timePauseStart = 0;
 
   // starting view coordinates
@@ -458,13 +583,9 @@ class Game extends Scene {
   static final int START_X_TOPFLOOR = Constants.PLAYER_WIDTH * 3;
   static final int START_Y_TOPFLOOR = Constants.PLAYER_HEIGHT * 3;
 
-  static final int START_X_GROUNDFLOOR = Constants.PLAYER_WIDTH * 3;
+  static final int START_X_GROUNDFLOOR = Constants.PLAYER_WIDTH  * 3;
   static final int START_Y_GROUNDFLOOR = Constants.PLAYER_HEIGHT * 3;
 
-
-  // Controller and status
-  Controller controller;
-  ControlIO control;
 
   boolean controller1[] = {
     false,
@@ -505,8 +626,6 @@ class Game extends Scene {
 
     }
 
-    control = ControlIO.getInstance(instance);
-    controller = new Controller(control);
     map = new Ptmx(instance, mapName);
     walkableLayerIndex = searchLayer("Walkable");
     pupPosition();
@@ -535,6 +654,14 @@ class Game extends Scene {
 
     }
 
+    player.resetTimers();
+
+    // Map parsing
+    for (Collectible c : oggettiCollezionabili)
+    {
+      c.resetStatus();
+    }
+
     paused = false;
     accept_inputs = true;
   }
@@ -558,22 +685,38 @@ class Game extends Scene {
   }
 
   /*int[]*/ public void pupPosition(){
-  for(int i = 0; i < map.getMapSize().x; i++){
-      for(int j = 0; j < map.getMapSize().y; j++){
-        if(map.getTileIndex(walkableLayerIndex, i, j) > 0 && map.getTileIndex(walkableLayerIndex, i, j) < 10 ){
-          oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, PuP + map.getTileIndex(walkableLayerIndex, i, j), false));
+
+  int indexObjects = searchLayer("Objects");
+
+  int objectIds[] = {274, 275, 276, 287, 288};
+
+  if (indexObjects != -2)
+  {
+    println("Found object layer " + indexObjects);
+    for(int i = 0; i < map.getMapSize().x; i++)
+    {
+        for(int j = 0; j < map.getMapSize().y; j++)
+        {
+          int tileIdx = map.getTileIndex(indexObjects, i, j) + 1;
+          for (int z = 0; z < 5; ++z)
+          {
+            if (objectIds[z] == tileIdx)
+            {
+              oggettiCollezionabili.add(new Collectible((i*map.getTileSize().x),(j*map.getTileSize().y),i, j, tileIdx , false));
+            }
+          }
         }
       }
-    }
-
-    for(Collectible c: oggettiCollezionabili){
-      println(c.toString());
-    }
   }
+  println("Collectibles:");
+  for(Collectible c: oggettiCollezionabili){
+    println(c.toString());
+  }
+}
 
 
 public void searchExitPositions() {
-  final int MAX_EXITS = 2;
+  final int MAX_EXITS = 4;
   for (int layer = 1; layer <= MAX_EXITS; layer++) {
     String layerName = "Exit" + layer;
     int layerIndex = searchLayer(layerName);
@@ -676,19 +819,20 @@ public void stairPositions() {
   public void draw() {
 
     try {
-      setDirection(String.valueOf(controller.LeftAnalogX()), true, false);
-      setDirection(String.valueOf(controller.LeftAnalogY()), false, false);
-      setDirection(String.valueOf(controller.RightAnalogX()), true, true);
-      setDirection(String.valueOf(controller.RightAnalogY()), false, true);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogX()), true, false);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogY()), false, false);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogX()), true, true);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogY()), false, true);
 
-      if (controller.BackPressed())
+      if (main_applet.controller.BackPressed())
       {
         main_applet.transition(Constants.MENU_SCENE);
       }
-      if (controller.StartPressed())
+      if (main_applet.controller.StartPressed())
       {
         if (millis() - timePauseStart > 500)
         {
+
            setPaused(!paused);
            timePauseStart = millis();
         }
@@ -700,42 +844,50 @@ public void stairPositions() {
     }
 
     map.draw(camera_x, camera_y);
+    drawObjects(camera_x, camera_y);
     player.draw(camera_x, camera_y);
-
 
     if (paused)
     {
-      fill(100,50);
+      fill(50,170);
       rect(0,0,width,height);
       fill(255,255);
-      text("PAUSE", 100, 100);
+      if (!showNote)
+      {
+        text("PAUSE", 50, 100);
+      }
+      else
+      {
+        text(currentNote, 50, 75);
+        text("PREMI P O START PER CONTINUARE", 50, main_applet.height - 50);
+      }
     }
 
     if (controller1[DIR_LEFT])
-      moveCamera((int)(-10.0f * ratio), 0, 0);
+      moveCamera((int)(-5.0f * ratio), 0, 0);
 
     if (controller2[DIR_LEFT])
-      moveCamera((int)(-10.0f * ratio), 0, 1);
+      moveCamera((int)(-5.0f * ratio), 0, 1);
 
 
     if (controller1[DIR_RIGHT])
-      moveCamera((int)(10.0f * ratio), 0, 0);
+      moveCamera((int)(5.0f * ratio), 0, 0);
 
     if(controller2[DIR_RIGHT])
-      moveCamera((int)(10.0f * ratio), 0, 1);
+      moveCamera((int)(5.0f * ratio), 0, 1);
 
 
     if (controller1[DIR_UP])
-     moveCamera(0, (int)(-10.0f * ratio), 0);
+     moveCamera(0, (int)(-5.0f * ratio), 0);
 
      if( controller2[DIR_UP])
-      moveCamera(0, (int)(-10.0f * ratio), 1);
+      moveCamera(0, (int)(-5.0f * ratio), 1);
 
     if (controller1[DIR_DOWN])
-      moveCamera(0, (int)(10.0f * ratio), 0);
+      moveCamera(0, (int)(5.0f * ratio), 0);
 
     if(controller2[DIR_DOWN])
-      moveCamera(0, (int)(10.0f * ratio), 1);
+      moveCamera(0, (int)(5.0f * ratio), 1);
 
   }
 
@@ -844,6 +996,11 @@ public void setDirection(String dir, boolean x, boolean right) {
 
   public void setPaused(boolean paused)
   {
+    if (this.paused && showNote)
+    {
+        showNote = false;
+    }
+
     this.paused = paused;
     player.setPaused(paused);
   }
@@ -903,17 +1060,19 @@ public void setDirection(String dir, boolean x, boolean right) {
       if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
       {
         // Win conditions for each player
-        if (movement_player == 0 && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
+        if (movement_player == Constants.JONNY && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
         {
-          println("GAME OVER: Player 1 wins");
+          main_applet.setLastWinner(Constants.JONNY);
+          println("GAME OVER: Jonny wins");
           main_applet.transition(Constants.GAME_OVER);
           accept_inputs = false;
         }
 
-        if(movement_player == 1 && !(e instanceof Ladder))
+        if(movement_player == Constants.KENNY && !(e instanceof Ladder))
         {
+          main_applet.setLastWinner(Constants.KENNY);
           main_applet.transition(Constants.GAME_OVER);
-          println("GAME OVER: Player 2 wins");
+          println("GAME OVER: Kenny wins");
           accept_inputs = false;
         }
       }
@@ -923,11 +1082,11 @@ public void setDirection(String dir, boolean x, boolean right) {
     if (isWalkable(next_player_tile_x, next_player_tile_y)) {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
-      if (player.x >= Constants.SCREEN_W / 2 && player.x < getTileMapWidth() - Constants.SCREEN_W / 2) {
+      if (player.x >= main_applet.width / 2 && player.x < getTileMapWidth() - main_applet.width / 2) {
         camera_x = camera_x + delta_x;
       }
 
-      if (player.y >= Constants.SCREEN_H / 2 && player.y < getTileMapHeight() - Constants.SCREEN_H / 2) {
+      if (player.y >= main_applet.height / 2 && player.y < getTileMapHeight() - main_applet.height / 2) {
         camera_y = camera_y + delta_y;
       }
 
@@ -1050,24 +1209,34 @@ public void setDirection(String dir, boolean x, boolean right) {
     }
   }
 
-  public void testCollectObject(int player_x, int player_y, boolean currentPlayer)
+  public void testCollectObject(int player_x, int player_y, int currentPlayer)
   {
     for(Collectible c : oggettiCollezionabili)
     {
         if (c.isColliding(player_x, player_y))
         {
+            if (!c.picked)
+            {
+              handlePickedObject(c.collectible_type, currentPlayer, c.getText(currentPlayer));
+              player.powerUp(currentPlayer);
+            }
+
             c.setPicked(true);
-            handlePickedObject(c.collectible_type, currentPlayer);
         }
     }
   }
 
-  public void handlePickedObject(int collectible_id, boolean currentPlayer)
+  public void handlePickedObject(int collectible_id, int currentPlayer, String text)
   {
-      if(currentPlayer)
+      if(currentPlayer == Constants.JONNY)
         println("Raccolto elemento " + collectible_id + " da Jonny");
       else
         println("Raccolto elemento " + collectible_id + " da Kenny");
+
+      currentNote = text;
+      showNote = true;
+      paused = true;
+      player.setPaused(true);
   }
 
 
@@ -1093,8 +1262,11 @@ class GameOver extends Scene
   public void draw(){
     background(0);
 
-    text("WHAT A LAME GAME OVER", 100, 100);
-
+    if (instance.getLastWinner() == Constants.JONNY)
+      text("JONNY E' RIUSCITO A RIMANERE A CASA!", 100, 100);
+    else
+      text("KENNY E' RIUSCITO A RAGGIUNGERE\n LA LIBERTA'!", 100, 100);
+  
   }
   public void keyPressed()
   {
@@ -1217,11 +1389,31 @@ class Menu extends Scene
       image(secondVideo, 0, 0);
     }
     
-    text("WHAT A LAME MENU", 100, 100);
+    text("THE PLACE\nWHERE I BELONG", 50, 50);
+    
+    text("PREMI UN TASTO PER INIZIARE", 100, Constants.VIDEO_H - 100);
 
-    popMatrix();    
+    popMatrix(); 
+
+    try {
+      
+      if (instance.controller.Apressed() || 
+          instance.controller.Bpressed() || 
+          instance.controller.Xpressed() || 
+          instance.controller.Ypressed() || 
+          instance.controller.StartPressed() ||
+          instance.controller.BackPressed() || 
+          instance.controller.LBpressed() ||
+          instance.controller.RBpressed())
+          {
+              keyPressed();
+              keyReleased();
+          }
+    }
+    catch(Exception e){}
   }
-  
+
+
   public void endTransition()
   {
     println("End transition menu");
@@ -1244,7 +1436,7 @@ class Menu extends Scene
 }
 
 
-final int PLAYER_TIME_SLOT = 3000;
+int PLAYER_TIME_SLOT[] = { Constants.DEFAULT_TIMER, Constants.DEFAULT_TIMER };
 
 class Player{
 
@@ -1266,11 +1458,11 @@ class Player{
   SoundFile currentStepSound;
 
   // Used to switch between the players
-  boolean currentPlayer = true;
+  int currentPlayer = Constants.JONNY;
 
   Player(PApplet instance){
-    animation_jonny = new Animation("Sprites\\Kenny\\P2_move", 5);
-    animation_kenny = new Animation("Sprites\\Jonny\\P1_move", 5);
+    animation_kenny = new Animation("Sprites\\Kenny\\P2_move", 5);
+    animation_jonny = new Animation("Sprites\\Jonny\\P1_move", 5);
 
     loadSounds(instance);
 
@@ -1279,6 +1471,11 @@ class Player{
     animation_kenny.updateDirection(Game.DIR_IDLE);
     time = millis();
     paused = false;
+  }
+
+  public void resetTimers()
+  {
+    PLAYER_TIME_SLOT[0] = PLAYER_TIME_SLOT[1] = Constants.DEFAULT_TIMER;
   }
 
   public void loadSounds(PApplet instance)
@@ -1304,7 +1501,7 @@ class Player{
       if ((currentStepSound != null && !currentStepSound.isPlaying()) || currentStepSound == null)
       {
         int rand_step = (int)(Math.random() * 10) % 4;
-        if (currentPlayer)
+        if (currentPlayer == Constants.JONNY)
           currentStepSound = steps_jonny[rand_step];
         else 
           currentStepSound = steps_kenny[rand_step];
@@ -1332,8 +1529,13 @@ class Player{
 
   public boolean isActive(int currPlayer)
   {
-    return (currPlayer == 1 && currentPlayer) || (currPlayer == 0 && !currentPlayer);
+    return (currPlayer == currentPlayer);
 
+  }
+
+  public void powerUp(int currentPLayer)
+  {
+    PLAYER_TIME_SLOT[currentPlayer] += 1000;
   }
 
   public void setDirection(int dir) {
@@ -1343,7 +1545,7 @@ class Player{
 
       direction = dir;
 
-     if (currentPlayer)
+     if (currentPlayer ==  Constants.JONNY)
       {
         animation_jonny.updateDirection(dir);
       }
@@ -1378,28 +1580,32 @@ public float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
 
   public void draw(int camera_x, int camera_y)
   {
-    double timer = Math.round(((PLAYER_TIME_SLOT - delta_time) / 1000.0f) * 10d) / 10d;
+    double timer = Math.round(((PLAYER_TIME_SLOT[currentPlayer] - delta_time) / 1000.0f) * 10d) / 10d;
 
     if(!paused)
     {
       fill(0,255);
-      text(String.valueOf(timer), 54, 54);
+      text(String.valueOf(timer), 25, 25);
       fill(255,255);
-      text(String.valueOf(timer), 50, 50);
+      text(String.valueOf(timer), 25, 25);
     
       delta_time += millis() - time;    
       updateStepSound();
     }
 
-    if (delta_time > PLAYER_TIME_SLOT)
+    if (delta_time > PLAYER_TIME_SLOT[currentPlayer])
     {
-      currentPlayer = !currentPlayer;   
+      if(currentPlayer == Constants.JONNY)
+        currentPlayer = Constants.KENNY;
+      else
+       currentPlayer = Constants.JONNY;
+
       setDirection(Game.DIR_IDLE);
       delta_time = 0.0f;   
     }
     time = millis();
 
-    if (currentPlayer)
+    if (currentPlayer == Constants.JONNY)
     {
       animation_jonny.display((this.x - camera_x), (this.y - camera_y));
     }
@@ -1420,7 +1626,7 @@ class Scene
    public void reset(){}
    public void endTransition() {}
 };
-  public void settings() {  fullScreen(); }
+  public void settings() {  size(960, 540); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "GlobalGameJam" };
     if (passedArgs != null) {

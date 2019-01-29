@@ -10,7 +10,7 @@ class GameOver extends Scene
     if (instance.getLastWinner() == Constants.JONNY)
       text("JONNY E' RIUSCITO A RIMANERE A CASA!", 100, 100);
     else
-      text("KENNY E' RIUSCITO A RAGGIUNGERE LA LIBERTA'!", 100, 100);
+      text("KENNY E' RIUSCITO A RAGGIUNGERE\n LA LIBERTA'!", 100, 100);
   
   }
   void keyPressed()
