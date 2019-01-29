@@ -9,7 +9,3 @@ Collaboratori:
 
 ![Icona del gioco](data/icon.gif)
 ![Icona del gioco](data/ezgif.com-gif-maker.gif)
-
-if (controllerler.Apressed() || controller.Bpressed() || controller.Xpressed() || controller.Ypressed() || controller.StartPressed() || controller.BackPressed() || controller.LBpressed() || controller.RBpressed()){
-  //CAZZI TUOI <3
-}
