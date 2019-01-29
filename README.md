@@ -1,5 +1,6 @@
 # GlobalGameJam
 Collaboratori:
+
 [tiaxter Sviluppatore](https://github.com/tiaxter)
 
 [Frigierim Sviluppatore](https://github.com/frigierim)
