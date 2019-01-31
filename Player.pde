@@ -24,10 +24,12 @@ class Player{
   // Used to switch between the players
   int currentPlayer = Constants.JONNY;
 
+  GlobalGameJam main_applet;
+
   Player(PApplet instance){
     animation_kenny = new Animation("Sprites\\Kenny\\P2_move", 5);
     animation_jonny = new Animation("Sprites\\Jonny\\P1_move", 5);
-
+    main_applet = (GlobalGameJam)instance;
     loadSounds(instance);
 
     direction = Game.DIR_IDLE;
@@ -157,14 +159,23 @@ float[] simulateMove(int delta_x, int delta_y, int levelW, int levelH){
       updateStepSound();
     }
 
+    //text("P: (" + x + "," + y + ")", x - camera_x, y - camera_y );
+    
     if (delta_time > PLAYER_TIME_SLOT[currentPlayer])
     {
       if(currentPlayer == Constants.JONNY)
+      {
         currentPlayer = Constants.KENNY;
+      }
       else
-       currentPlayer = Constants.JONNY;
+      {
+        currentPlayer = Constants.JONNY;
+      }
 
+      for(int i = 0; i<4; ++i) main_applet.controllers[Constants.KENNY][i] = false;
+      for(int i = 0; i<4; ++i) main_applet.controllers[Constants.JONNY][i] = false;
       setDirection(Game.DIR_IDLE);
+
       delta_time = 0.0f;   
     }
     time = millis();

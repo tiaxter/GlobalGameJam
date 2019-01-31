@@ -31,6 +31,7 @@ class Collectible{
 
   void draw(int camera_x, int camera_y)
   {
+    //text("Obj: (" + this.absx + "," + this.absy + ") (" + mapx + "," + mapy + ")", this.absx - camera_x, this.absy - camera_y );
     if (!picked)
     {
       image(image, this.absx - camera_x, this.absy - camera_y);
@@ -41,6 +42,16 @@ class Collectible{
   {
     return player_x == this.mapx && player_y == this.mapy;
   }
+
+  boolean isCollidingBox(int player_xs, int player_xe, int player_ys, int player_ye)
+  {
+    //TODO: define note width rather than using palyer width
+    return( player_xs < absx + Constants.TILE_W && 
+            player_xe > absx &&
+            player_ys < absy + Constants.TILE_H && 
+            player_ye > absy);
+  }
+
 
   void setPicked(boolean p)
   {

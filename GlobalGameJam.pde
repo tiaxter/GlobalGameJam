@@ -2,7 +2,7 @@
 import processing.sound.*;
 float ratio = 0.0;
 
-Scene scenes[] = { null, null, null, null};
+Scene scenes[] = { null, null, null, null,  null, null};
 SoundFile music;
 
 final int FADEOUT_TIME_MS = 1000;
@@ -14,6 +14,12 @@ boolean fade = false;
 float screen_x = 0.0;
 
 int lastWinner = 0;
+
+
+boolean controllers[][] = {
+  {false, false, false, false},
+  {false, false, false, false}
+};
 
 
 // Controller and status
@@ -35,13 +41,18 @@ void setup()
     ratio = min((float)this.width / Constants.SCREEN_W, (float )this.height / Constants.SCREEN_H);
 
     scenes[Constants.MENU_SCENE] = new Menu(ratio);
-    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Piano1/Piano1.tmx", Constants.GAME_TOPFLOOR);
-    scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx", Constants.GAME_GROUNDFLOOR);
+    scenes[Constants.GAME_TOPFLOOR] = new Game(ratio, "Levels/Piano1/Piano1.tmx", Constants.GAME_TOPFLOOR, Constants.GAME_GROUNDFLOOR, Constants.GAME_OVER);
+    // Mansion is currently unreachable!
+    scenes[Constants.GAME_MANSION] = new Game(ratio, "Levels/Mansion/Mansion.tmx", Constants.GAME_MANSION, Constants.GAME_MANSION, Constants.GAME_MANSION);
+    scenes[Constants.GAME_GROUNDFLOOR] = new Game(ratio, "Levels/PianoT/PianoT.tmx", Constants.GAME_GROUNDFLOOR,Constants.GAME_OVER, Constants.GAME_OVER);
+    scenes[Constants.GAME_GARDEN] = new Game(ratio, "Levels/Giardino/Giardino.tmx", Constants.GAME_GARDEN, Constants.GAME_GROUNDFLOOR, Constants.GAME_OVER);
     scenes[Constants.GAME_OVER] = new GameOver(ratio);
 
     if (!(scenes[Constants.MENU_SCENE].init(this) && 
           scenes[Constants.GAME_GROUNDFLOOR].init(this) && 
           scenes[Constants.GAME_TOPFLOOR].init(this) &&
+          scenes[Constants.GAME_MANSION].init(this) &&
+          scenes[Constants.GAME_GARDEN].init(this) &&
           scenes[Constants.GAME_OVER].init(this)))
     {
       print("Error initializing scenes!");
@@ -51,7 +62,7 @@ void setup()
     control = ControlIO.getInstance(this);
     controller = new Controller(control);
 
-    currentScene = Constants.MENU_SCENE;
+    currentScene = Constants.GAME_GROUNDFLOOR;
 
     music = new SoundFile(this, "Sounds/RumoreBiancoCasa.wav");
     music.amp(0.2); 

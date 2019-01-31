@@ -42,27 +42,23 @@ class Game extends Scene {
   static final int START_X_GROUNDFLOOR = Constants.PLAYER_WIDTH  * 3;
   static final int START_Y_GROUNDFLOOR = Constants.PLAYER_HEIGHT * 3;
 
+  static final int START_X_GARDEN = Constants.PLAYER_WIDTH  * 3;
+  static final int START_Y_GARDEN = Constants.PLAYER_HEIGHT * 3;
 
-  boolean controller1[] = {
-    false,
-    false,
-    false,
-    false
-  };
-
-  boolean controller2[] = {
-    false,
-    false,
-    false,
-    false
-  };
+  static final int START_X_MANSION = Constants.PLAYER_WIDTH  * 3;
+  static final int START_Y_MANSION = Constants.PLAYER_HEIGHT * 3;
 
   GlobalGameJam main_applet;
+  int exitSceneId;
+  int stairSceneId;
+  
 
-  Game(float ratio, String map, int idMap) {
+  Game(float ratio, String map, int idMap, int onStairId, int onExitId) {
     super(ratio);
     this.mapName = map;
     this.mapId = idMap;
+    this.exitSceneId = onExitId;
+    this.stairSceneId = onStairId;
   }
 
   boolean init(PApplet instance) {
@@ -74,12 +70,14 @@ class Game extends Scene {
     {
       player.setPosition(START_X_TOPFLOOR, START_Y_TOPFLOOR);
     }
-    else
-    {
-        if(mapId == Constants.GAME_GROUNDFLOOR){
+    else if(mapId == Constants.GAME_GROUNDFLOOR){
         player.setPosition(START_X_GROUNDFLOOR ,START_Y_GROUNDFLOOR);
-        }
-
+    }
+    else if(mapId == Constants.GAME_MANSION){
+        player.setPosition(START_X_MANSION ,START_Y_MANSION);
+    }
+    else if(mapId == Constants.GAME_GARDEN){
+        player.setPosition(START_X_GARDEN ,START_Y_GARDEN);
     }
 
     map = new Ptmx(instance, mapName);
@@ -148,7 +146,6 @@ class Game extends Scene {
 
   if (indexObjects != -2)
   {
-    println("Found object layer " + indexObjects);
     for(int i = 0; i < map.getMapSize().x; i++)
     {
         for(int j = 0; j < map.getMapSize().y; j++)
@@ -164,10 +161,7 @@ class Game extends Scene {
         }
       }
   }
-  println("Collectibles:");
-  for(Collectible c: oggettiCollezionabili){
-    println(c.toString());
-  }
+
 }
 
 
@@ -201,7 +195,7 @@ void searchExitPositions() {
           if (d.height > max_y)
             max_y = d.height;
       }
-      Exit e = new Exit(min_x, min_y, max_x, max_y);
+      Exit e = new Exit(min_x * Constants.TILE_W, min_y * Constants.TILE_H, (max_x+1) * Constants.TILE_W, (max_y+1) * Constants.TILE_H);
       exitPositions.add(e);
     }
   }
@@ -250,10 +244,29 @@ void stairPositions() {
         max_y = d.height;
   }
 
-  Ladder l = new Ladder(min_x, min_y, max_x, max_y, x_exit, y_exit);
+  Ladder l = new Ladder(min_x * Constants.TILE_W, min_y * Constants.TILE_H,
+                        (max_x+1) * Constants.TILE_W, (max_y+1) * Constants.TILE_H, 
+                        x_exit * Constants.TILE_W, y_exit * Constants.TILE_H);
   exitPositions.add(l);
 
 }
+
+  boolean isWalkableArea(int xs, int xe, int ys, int ye) 
+  {
+    boolean walkable = true;
+
+    int x1 = (int)(xs/map.getTileSize().x);
+    int x2 = (int)(xe/map.getTileSize().x);
+    int y1 = (int)(ys/map.getTileSize().y);
+    int y2 = (int)(ye/map.getTileSize().y);
+
+    return (map.getTileIndex(walkableLayerIndex, x1, y1) > 0 &&
+            map.getTileIndex(walkableLayerIndex, x2, y1) > 0 &&
+            map.getTileIndex(walkableLayerIndex, x1, y2) > 0 &&
+            map.getTileIndex(walkableLayerIndex, x2, y2) > 0
+    );
+    
+  }
 
 
 
@@ -275,10 +288,10 @@ void stairPositions() {
   void draw() {
 
     try {
-      setDirection(String.valueOf(main_applet.controller.LeftAnalogX()), true, false);
-      setDirection(String.valueOf(main_applet.controller.LeftAnalogY()), false, false);
-      setDirection(String.valueOf(main_applet.controller.RightAnalogX()), true, true);
-      setDirection(String.valueOf(main_applet.controller.RightAnalogY()), false, true);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogX()), true, Constants.KENNY);
+      setDirection(String.valueOf(main_applet.controller.LeftAnalogY()), false, Constants.KENNY);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogX()), true, Constants.JONNY);
+      setDirection(String.valueOf(main_applet.controller.RightAnalogY()), false, Constants.JONNY);
 
       if (main_applet.controller.BackPressed())
       {
@@ -319,35 +332,34 @@ void stairPositions() {
       }
     }
 
-    if (controller1[DIR_LEFT])
+    if (main_applet.controllers[Constants.KENNY][DIR_LEFT])
       moveCamera((int)(-5.0 * ratio), 0, 0);
 
-    if (controller2[DIR_LEFT])
+    if (main_applet.controllers[Constants.JONNY][DIR_LEFT])
       moveCamera((int)(-5.0 * ratio), 0, 1);
 
 
-    if (controller1[DIR_RIGHT])
+    if (main_applet.controllers[Constants.KENNY][DIR_RIGHT])
       moveCamera((int)(5.0 * ratio), 0, 0);
 
-    if(controller2[DIR_RIGHT])
+    if(main_applet.controllers[Constants.JONNY][DIR_RIGHT])
       moveCamera((int)(5.0 * ratio), 0, 1);
 
-
-    if (controller1[DIR_UP])
+    if (main_applet.controllers[Constants.KENNY][DIR_UP])
      moveCamera(0, (int)(-5.0 * ratio), 0);
 
-     if( controller2[DIR_UP])
+     if( main_applet.controllers[Constants.JONNY][DIR_UP])
       moveCamera(0, (int)(-5.0 * ratio), 1);
 
-    if (controller1[DIR_DOWN])
+    if (main_applet.controllers[Constants.KENNY][DIR_DOWN])
       moveCamera(0, (int)(5.0 * ratio), 0);
 
-    if(controller2[DIR_DOWN])
+    if(main_applet.controllers[Constants.JONNY][DIR_DOWN])
       moveCamera(0, (int)(5.0 * ratio), 1);
 
   }
 
-void setDirection(String dir, boolean x, boolean right) {
+void setDirection(String dir, boolean x, int currPlayer) {
     float xoy;
     try {
       xoy = Float.valueOf(dir);
@@ -355,90 +367,90 @@ void setDirection(String dir, boolean x, boolean right) {
       xoy = 0;
     }
 
-    if(!right){
+    if(currPlayer == Constants.KENNY)
+    {
       if (!x) {
         if (xoy > 0.5) {
-          controller1[DIR_DOWN] = true;
+          main_applet.controllers[Constants.KENNY][DIR_DOWN] = true;
           player.setDirection(DIR_DOWN);
         } else {
-          if (controller1[DIR_DOWN] == true)
+          if (main_applet.controllers[Constants.KENNY][DIR_DOWN] == true)
             player.setDirection(DIR_IDLE);
 
-          controller1[DIR_DOWN] = false;
+          main_applet.controllers[Constants.KENNY][DIR_DOWN] = false;
         }
 
         if (xoy < -0.5) {
-          controller1[DIR_UP] = true;
+          main_applet.controllers[Constants.KENNY][DIR_UP] = true;
           player.setDirection(DIR_UP);
         } else {
-          if (controller1[DIR_UP] == true)
+          if (main_applet.controllers[Constants.KENNY][DIR_UP] == true)
             player.setDirection(DIR_IDLE);
 
-          controller1[DIR_UP] = false;
+          main_applet.controllers[Constants.KENNY][DIR_UP] = false;
         }
       } else {
         if (xoy < -0.5) {
-          controller1[DIR_LEFT] = true;
+          main_applet.controllers[Constants.KENNY][DIR_LEFT] = true;
           player.setDirection(DIR_LEFT);
         } else {
-          if (controller1[DIR_LEFT] == true)
+          if (main_applet.controllers[Constants.KENNY][DIR_LEFT] == true)
             player.setDirection(DIR_IDLE);
 
-          controller1[DIR_LEFT] = false;
+          main_applet.controllers[Constants.KENNY][DIR_LEFT] = false;
         }
 
         if (xoy > 0.5) {
-          controller1[DIR_RIGHT] = true;
+          main_applet.controllers[Constants.KENNY][DIR_RIGHT] = true;
           player.setDirection(DIR_RIGHT);
         } else {
-          if (controller1[DIR_RIGHT] == true)
+          if (main_applet.controllers[Constants.KENNY][DIR_RIGHT] == true)
             player.setDirection(DIR_IDLE);
-          controller1[DIR_RIGHT] = false;
+          main_applet.controllers[Constants.KENNY][DIR_RIGHT] = false;
         }
       }
     }else{
       if (!x) {
         if (xoy > 0.5) {
-          controller2[DIR_DOWN] = true;
+          main_applet.controllers[Constants.JONNY][DIR_DOWN] = true;
           player.setDirection(DIR_DOWN);
         } else {
-          if (controller2[DIR_DOWN] == true)
+          if (main_applet.controllers[Constants.JONNY][DIR_DOWN] == true)
             player.setDirection(DIR_IDLE);
 
-          controller2[DIR_DOWN] = false;
+          main_applet.controllers[Constants.JONNY][DIR_DOWN] = false;
         }
 
         if (xoy < -0.5) {
-          controller2[DIR_UP] = true;
+          main_applet.controllers[Constants.JONNY][DIR_UP] = true;
           player.setDirection(DIR_UP);
         } else {
-          if (controller2[DIR_UP] == true)
+          if (main_applet.controllers[Constants.JONNY][DIR_UP] == true)
             player.setDirection(DIR_IDLE);
 
-          controller2[DIR_UP] = false;
+          main_applet.controllers[Constants.JONNY][DIR_UP] = false;
         }
       } else {
         if (xoy < -0.5) {
-          controller2[DIR_LEFT] = true;
+          main_applet.controllers[Constants.JONNY][DIR_LEFT] = true;
           player.setDirection(DIR_LEFT);
         } else {
-          if (controller2[DIR_LEFT] == true)
+          if (main_applet.controllers[Constants.JONNY][DIR_LEFT] == true)
             player.setDirection(DIR_IDLE);
 
-          controller2[DIR_LEFT] = false;
+          main_applet.controllers[Constants.JONNY][DIR_LEFT] = false;
         }
 
         if (xoy > 0.5) {
-          controller2[DIR_RIGHT] = true;
+          main_applet.controllers[Constants.JONNY][DIR_RIGHT] = true;
           player.setDirection(DIR_RIGHT);
         } else {
-          if (controller2[DIR_RIGHT] == true)
+          if (main_applet.controllers[Constants.JONNY][DIR_RIGHT] == true)
             player.setDirection(DIR_IDLE);
-          controller2[DIR_RIGHT] = false;
+          main_applet.controllers[Constants.JONNY][DIR_RIGHT] = false;
         }
       }
     }
-
   }
 
 
@@ -473,39 +485,52 @@ void setDirection(String dir, boolean x, boolean right) {
 
     float xy[] = player.simulateMove(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
-    int curr_player_tile_x = (int)((player.x + Constants.PLAYER_WIDTH  / 2) / map.getTileSize().x);
-    int curr_player_tile_y = (int)((player.y + Constants.PLAYER_HEIGHT / 2) / map.getTileSize().y);
+    int curr_player_bb_xs = (int)player.x + (Constants.PLAYER_WIDTH - Constants.PLAYER_WIDTH_BB) / 2;
+    int curr_player_bb_xe = (int)player.x + (Constants.PLAYER_WIDTH + Constants.PLAYER_WIDTH_BB) / 2;
+    int curr_player_bb_ys = (int)player.y + (Constants.PLAYER_HEIGHT - Constants.PLAYER_HEIGHT_BB) / 2;
+    int curr_player_bb_ye = (int)player.y + (Constants.PLAYER_HEIGHT + Constants.PLAYER_HEIGHT_BB) / 2;
+    
+    int next_player_bb_xs = (int)xy[0] + (Constants.PLAYER_WIDTH - Constants.PLAYER_WIDTH_BB) / 2;
+    int next_player_bb_xe = (int)xy[0] + (Constants.PLAYER_WIDTH + Constants.PLAYER_WIDTH_BB) / 2;
+    int next_player_bb_ys = (int)xy[1] + (Constants.PLAYER_HEIGHT - Constants.PLAYER_HEIGHT_BB) / 2;
+    int next_player_bb_ye = (int)xy[1] + (Constants.PLAYER_HEIGHT + Constants.PLAYER_HEIGHT_BB) / 2;
 
-    int next_player_tile_x = (int)((xy[0] + Constants.PLAYER_WIDTH  / 2) / map.getTileSize().x);
-    int next_player_tile_y = (int)((xy[1] + Constants.PLAYER_HEIGHT / 2) / map.getTileSize().y);
-
-
+    fill(255,0,0,255);
+    rect(curr_player_bb_xs - camera_x, curr_player_bb_ys - camera_y, curr_player_bb_xe - curr_player_bb_xs, curr_player_bb_ye - curr_player_bb_ys);
+    
+    fill(0,255,0,255);
+    rect(next_player_bb_xs - camera_x, next_player_bb_ys - camera_y, next_player_bb_xe - next_player_bb_xs, next_player_bb_ye - next_player_bb_ys);
+    
     // Check for exits and ladders
     for(Exit e: exitPositions)
     {
-
       // Stairs checks... movement can only be horizontal
       if (e instanceof Ladder)
       {
         // Moving away from an exit tile
-        if(!e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+        if(!e.isPlayerOverAreaBox(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye))
         {
           // to a standard tile
-          if(e.isPlayerOverArea(curr_player_tile_x, curr_player_tile_y))
+          if(e.isPlayerOverAreaBox(curr_player_bb_xs, curr_player_bb_xe, curr_player_bb_ys, curr_player_bb_ye))
           {
-
-            // If next move takes the player away from the stairs, prevent it unless you're moving horizontally
-            if (player.direction != Game.DIR_LEFT || player.direction != Game.DIR_RIGHT);
+            if (main_applet.controllers[movement_player][DIR_DOWN] || 
+                main_applet.controllers[movement_player][DIR_UP] ||
+                e.isGameOverBox(curr_player_bb_xs, curr_player_bb_xe, curr_player_bb_ys, curr_player_bb_ye))
             {
               return;
             }
           }
         }
-
-        // Moving over a ladder tile
-        if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+        else
         {
-          if (player.direction != Game.DIR_LEFT && player.direction != Game.DIR_RIGHT)
+          if(!e.isPlayerOverAreaBox(curr_player_bb_xs, curr_player_bb_xe, curr_player_bb_ys, curr_player_bb_ye))
+          {
+            // moving from non-stair to stair cannot happen from the end!
+            if (e.isGameOverBox(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye))
+              return;
+          }
+
+          if (main_applet.controllers[movement_player][DIR_DOWN] || main_applet.controllers[movement_player][DIR_UP])
           {
             return;
           }
@@ -513,29 +538,28 @@ void setDirection(String dir, boolean x, boolean right) {
       }
 
       // Moving towards an exit tile
-      if(e.isPlayerOverArea(next_player_tile_x, next_player_tile_y))
+      if(e.isPlayerOverAreaBox(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye))
       {
         // Win conditions for each player
-        if (movement_player == Constants.JONNY && e instanceof Ladder && e.isGameOver(next_player_tile_x, next_player_tile_y))
+        if (movement_player == Constants.JONNY && e instanceof Ladder && e.isGameOverBox(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye))
         {
           main_applet.setLastWinner(Constants.JONNY);
-          println("GAME OVER: Jonny wins");
-          main_applet.transition(Constants.GAME_OVER);
+          main_applet.transition(this.stairSceneId);
           accept_inputs = false;
         }
 
         if(movement_player == Constants.KENNY && !(e instanceof Ladder))
         {
           main_applet.setLastWinner(Constants.KENNY);
-          main_applet.transition(Constants.GAME_OVER);
-          println("GAME OVER: Kenny wins");
+          main_applet.transition(this.exitSceneId);
           accept_inputs = false;
         }
       }
     }
 
     // Check ground collisions
-    if (isWalkable(next_player_tile_x, next_player_tile_y)) {
+    if (isWalkableArea(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye)) 
+    {
       player.move(delta_x, delta_y, getTileMapWidth(), getTileMapHeight());
 
       if (player.x >= main_applet.width / 2 && player.x < getTileMapWidth() - main_applet.width / 2) {
@@ -546,59 +570,71 @@ void setDirection(String dir, boolean x, boolean right) {
         camera_y = camera_y + delta_y;
       }
 
-      testCollectObject(next_player_tile_x, next_player_tile_y, player.currentPlayer);
+      testCollectObject(next_player_bb_xs, next_player_bb_xe, next_player_bb_ys, next_player_bb_ye, player.currentPlayer);
     }
   }
 
   void keyReleased() {
     if (key == CODED) {
-      if (keyCode == DOWN) {
-        controller2[DIR_DOWN] = false;
-        player.setDirection(DIR_IDLE);
+
+      if (player.isActive(Constants.JONNY))
+      {
+        if (keyCode == DOWN) {
+          main_applet.controllers[Constants.JONNY][DIR_DOWN] = false;
+        }
+
+        //else
+        if (keyCode == RIGHT){
+          main_applet.controllers[Constants.JONNY][DIR_RIGHT] = false;
+        }
+
+        //else
+        if (keyCode == UP){
+          main_applet.controllers[Constants.JONNY][DIR_UP] = false;
+        }
+
+
+        if (keyCode == LEFT){
+          main_applet.controllers[Constants.JONNY][DIR_LEFT] = false;
+        }
+        //
+      }
+
+      if (main_applet.controllers[Constants.JONNY][DIR_UP] == false && 
+          main_applet.controllers[Constants.JONNY][DIR_DOWN] == false && 
+          main_applet.controllers[Constants.JONNY][DIR_LEFT] == false && 
+          main_applet.controllers[Constants.JONNY][DIR_RIGHT] == false)
+          player.setDirection(DIR_IDLE);
+    }
+
+    if (player.isActive(Constants.KENNY))
+    {
+      if (key == 'S' || key == 's') {
+        main_applet.controllers[Constants.KENNY][DIR_DOWN] = false;
       }
 
       //else
-      if (keyCode == RIGHT){
-        controller2[DIR_RIGHT] = false;
-        player.setDirection(DIR_IDLE);
+      if (key == 'D' || key == 'd'){
+        main_applet.controllers[Constants.KENNY][DIR_RIGHT] = false;
       }
 
       //else
-      if (keyCode == UP){
-        controller2[DIR_UP] = false;
-        player.setDirection(DIR_IDLE);
+      if (key == 'W' || key == 'w'){
+        main_applet.controllers[Constants.KENNY][DIR_UP] = false;
       }
 
 
-      if (keyCode == LEFT){
-        controller2[DIR_LEFT] = false;
-        player.setDirection(DIR_IDLE);
+      if (key == 'A' || key == 'a'){
+        main_applet.controllers[Constants.KENNY][DIR_LEFT] = false;
       }
-      //
+
+      if (main_applet.controllers[Constants.KENNY][DIR_UP] == false && 
+          main_applet.controllers[Constants.KENNY][DIR_DOWN] == false && 
+          main_applet.controllers[Constants.KENNY][DIR_LEFT] == false && 
+          main_applet.controllers[Constants.KENNY][DIR_RIGHT] == false)
+          player.setDirection(DIR_IDLE);
     }
 
-    if (key == 'S' || key == 's') {
-      controller1[DIR_DOWN] = false;
-      player.setDirection(DIR_IDLE);
-    }
-
-    //else
-    if (key == 'D' || key == 'd'){
-      controller1[DIR_RIGHT] = false;
-      player.setDirection(DIR_IDLE);
-    }
-
-    //else
-    if (key == 'W' || key == 'w'){
-      controller1[DIR_UP] = false;
-      player.setDirection(DIR_IDLE);
-    }
-
-
-    if (key == 'A' || key == 'a'){
-      controller1[DIR_LEFT] = false;
-      player.setDirection(DIR_IDLE);
-    }
 
     if (key == 'P' || key == 'p'){
       setPaused(!paused);
@@ -614,46 +650,55 @@ void setDirection(String dir, boolean x, boolean right) {
     }
 
     if (key == CODED) {
-      if (keyCode == DOWN) {
-        controller2[DIR_DOWN] = true;
+
+      if (player.isActive(Constants.JONNY))
+      {
+
+        if (keyCode == DOWN) {
+          main_applet.controllers[Constants.JONNY][DIR_DOWN] = true;
+          player.setDirection(DIR_DOWN);
+        }
+        //else
+        if (keyCode == RIGHT) {
+          main_applet.controllers[Constants.JONNY][DIR_RIGHT] = true;
+          player.setDirection(DIR_RIGHT);
+        }
+        //else
+        if (keyCode == UP) {
+          main_applet.controllers[Constants.JONNY][DIR_UP] = true;
+          player.setDirection(DIR_UP);
+        }
+        if (keyCode == LEFT) {
+          main_applet.controllers[Constants.JONNY][DIR_LEFT] = true;
+          player.setDirection(DIR_LEFT);
+        }
+      }    
+    }
+
+    if (player.isActive(Constants.KENNY))
+    {
+
+      if (key == 'S' || key == 's') {
+        main_applet.controllers[Constants.KENNY][DIR_DOWN] = true;
         player.setDirection(DIR_DOWN);
       }
+
       //else
-      if (keyCode == RIGHT) {
-        controller2[DIR_RIGHT] = true;
+      if (key == 'D' || key == 'd'){
+        main_applet.controllers[Constants.KENNY][DIR_RIGHT] = true;
         player.setDirection(DIR_RIGHT);
       }
+
       //else
-      if (keyCode == UP) {
-        controller2[DIR_UP] = true;
-        player.setDirection(DIR_UP);
+      if (key == 'W' || key == 'w'){
+          main_applet.controllers[Constants.KENNY][DIR_UP] = true;
+          player.setDirection(DIR_UP);
       }
-      if (keyCode == LEFT) {
-        controller2[DIR_LEFT] = true;
+
+      if (key == 'A' || key == 'a'){
+        main_applet.controllers[Constants.KENNY][DIR_LEFT] = true;
         player.setDirection(DIR_LEFT);
       }
-    }
-
-    if (key == 'S' || key == 's') {
-      controller1[DIR_DOWN] = true;
-      player.setDirection(DIR_DOWN);
-    }
-
-    //else
-    if (key == 'D' || key == 'd'){
-      controller1[DIR_RIGHT] = true;
-      player.setDirection(DIR_RIGHT);
-    }
-
-    //else
-    if (key == 'W' || key == 'w'){
-        controller1[DIR_UP] = true;
-        player.setDirection(DIR_UP);
-    }
-
-    if (key == 'A' || key == 'a'){
-      controller1[DIR_LEFT] = true;
-      player.setDirection(DIR_LEFT);
     }
   }
 
@@ -665,11 +710,11 @@ void setDirection(String dir, boolean x, boolean right) {
     }
   }
 
-  void testCollectObject(int player_x, int player_y, int currentPlayer)
+  void testCollectObject(int player_xs, int player_xe, int player_ys, int player_ye, int currentPlayer)
   {
     for(Collectible c : oggettiCollezionabili)
     {
-        if (c.isColliding(player_x, player_y))
+        if (c.isCollidingBox(player_xs, player_xe, player_ys, player_ye))
         {
             if (!c.picked)
             {
@@ -684,11 +729,6 @@ void setDirection(String dir, boolean x, boolean right) {
 
   void handlePickedObject(int collectible_id, int currentPlayer, String text)
   {
-      if(currentPlayer == Constants.JONNY)
-        println("Raccolto elemento " + collectible_id + " da Jonny");
-      else
-        println("Raccolto elemento " + collectible_id + " da Kenny");
-
       currentNote = text;
       showNote = true;
       paused = true;

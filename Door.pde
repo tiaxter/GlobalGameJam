@@ -36,6 +36,15 @@ class Door
     return grid_x == this.mapx && grid_y == this.mapy; 
   }
 
+  boolean isCollidingBox(int player_xs, int player_xe, int player_ys, int player_ye)
+  {
+    //TODO: define note width rather than using palyer width
+    return( player_xs < absx + Constants.PLAYER_WIDTH_BB && 
+            player_xe > absx &&
+            player_ys < absy + Constants.PLAYER_HEIGHT_BB && 
+            player_ye > absy);
+  }
+
   void setOpened(boolean p)
   {
     this.opened = p;

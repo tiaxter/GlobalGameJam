@@ -13,10 +13,18 @@ static final int MENU_SCENE = 0;
 static final int GAME_TOPFLOOR = 1;
 static final int GAME_GROUNDFLOOR = 2;
 static final int GAME_OVER = 3;
+static final int GAME_MANSION = 4;
+static final int GAME_GARDEN = 5;
 
+static final int TILE_W = 96;
+static final int TILE_H = 96;
 
 static final int  PLAYER_WIDTH = 96;
 static final int  PLAYER_HEIGHT = 96;
+
+static final int  PLAYER_WIDTH_BB = 70;
+static final int  PLAYER_HEIGHT_BB = 70;
+
 
 static final int VIDEO_W = 960;
 static final int VIDEO_H = 540;

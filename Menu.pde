@@ -95,7 +95,6 @@ class Menu extends Scene
 
   void endTransition()
   {
-    println("End transition menu");
   }
 
   void keyPressed()
@@ -105,7 +104,6 @@ class Menu extends Scene
   }
 
   void keyReleased(){
-    println("Starting transition...");
     moviePlaying = 0;
     instance.transition(Constants.GAME_GROUNDFLOOR);
 
